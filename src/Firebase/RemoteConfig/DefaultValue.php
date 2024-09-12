@@ -15,8 +15,13 @@ use JsonSerializable;
  */
 class DefaultValue implements JsonSerializable
 {
-    private function __construct(private readonly ParameterValue $value)
+    /**
+     * @readonly
+     */
+    private ParameterValue $value;
+    private function __construct(ParameterValue $value)
     {
+        $this->value = $value;
     }
 
     public static function useInAppDefault(): self

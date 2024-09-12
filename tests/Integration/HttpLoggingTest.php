@@ -7,7 +7,6 @@ namespace Kreait\Firebase\Tests\Integration;
 use Kreait\Firebase\Contract\Auth;
 use Kreait\Firebase\Exception\Auth\UserNotFound;
 use Kreait\Firebase\Tests\IntegrationTestCase;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -35,11 +34,9 @@ final class HttpLoggingTest extends IntegrationTestCase
         $this->authWithDebugLogger = self::$factory->withHttpDebugLogger($this->debugLogger)->createAuth();
     }
 
-    #[Test]
     public function itLogsSuccesses(): void
     {
         $user = $this->auth->createAnonymousUser();
-
         try {
             $this->logger->expects($this->atLeastOnce())->method('log');
             $this->authWithLogger->getUser($user->uid);
@@ -48,11 +45,9 @@ final class HttpLoggingTest extends IntegrationTestCase
         }
     }
 
-    #[Test]
     public function itLogsFailures(): void
     {
         $this->debugLogger->expects($this->atLeastOnce())->method('log');
-
         try {
             $this->authWithDebugLogger->updateUser('does-not-exist', []);
         } catch (Throwable $e) {
@@ -60,11 +55,9 @@ final class HttpLoggingTest extends IntegrationTestCase
         }
     }
 
-    #[Test]
     public function itUsesAHttpDebugLogger(): void
     {
         $user = $this->auth->createAnonymousUser();
-
         try {
             $this->debugLogger->expects($this->atLeastOnce())->method('log');
             $this->authWithDebugLogger->getUser($user->uid);

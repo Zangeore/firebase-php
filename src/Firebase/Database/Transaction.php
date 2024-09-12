@@ -13,6 +13,10 @@ use function array_key_exists;
 class Transaction
 {
     /**
+     * @readonly
+     */
+    private ApiClient $apiClient;
+    /**
      * @var array<string, string>
      */
     private array $etags;
@@ -20,8 +24,9 @@ class Transaction
     /**
      * @internal
      */
-    public function __construct(private readonly ApiClient $apiClient)
+    public function __construct(ApiClient $apiClient)
     {
+        $this->apiClient = $apiClient;
         $this->etags = [];
     }
 
@@ -42,8 +47,9 @@ class Transaction
     /**
      * @throws ReferenceHasNotBeenSnapshotted
      * @throws TransactionFailed
+     * @param mixed $value
      */
-    public function set(Reference $reference, mixed $value): void
+    public function set(Reference $reference, $value): void
     {
         $etag = $this->getEtagForReference($reference);
 

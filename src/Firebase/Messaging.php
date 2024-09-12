@@ -37,14 +37,28 @@ use function array_map;
  */
 final class Messaging implements Contract\Messaging
 {
-    public function __construct(
-        private readonly ApiClient $messagingApi,
-        private readonly AppInstanceApiClient $appInstanceApi,
-        private readonly MessagingApiExceptionConverter $exceptionConverter,
-    ) {
+    /**
+     * @readonly
+     */
+    private ApiClient $messagingApi;
+    /**
+     * @readonly
+     */
+    private AppInstanceApiClient $appInstanceApi;
+    /**
+     * @readonly
+     */
+    private MessagingApiExceptionConverter $exceptionConverter;
+    public function __construct(ApiClient $messagingApi, AppInstanceApiClient $appInstanceApi, MessagingApiExceptionConverter $exceptionConverter)
+    {
+        $this->messagingApi = $messagingApi;
+        $this->appInstanceApi = $appInstanceApi;
+        $this->exceptionConverter = $exceptionConverter;
     }
-
-    public function send(Message|array $message, bool $validateOnly = false): array
+    /**
+     * @param Message|mixed[] $message
+     */
+    public function send($message, bool $validateOnly = false): array
     {
         $message = $this->makeMessage($message);
 
@@ -133,7 +147,11 @@ final class Messaging implements Contract\Messaging
         ];
     }
 
-    public function subscribeToTopic(string|Topic $topic, RegistrationTokens|RegistrationToken|array|string $registrationTokenOrTokens): array
+    /**
+     * @param string|Topic $topic
+     * @param RegistrationTokens|RegistrationToken|mixed[]|string $registrationTokenOrTokens
+     */
+    public function subscribeToTopic($topic, $registrationTokenOrTokens): array
     {
         return $this->subscribeToTopics([$topic], $registrationTokenOrTokens);
     }
@@ -151,12 +169,19 @@ final class Messaging implements Contract\Messaging
         return $this->appInstanceApi->subscribeToTopics($topicObjects, $tokens);
     }
 
-    public function unsubscribeFromTopic(string|Topic $topic, RegistrationTokens|RegistrationToken|array|string $registrationTokenOrTokens): array
+    /**
+     * @param string|Topic $topic
+     * @param RegistrationTokens|RegistrationToken|mixed[]|string $registrationTokenOrTokens
+     */
+    public function unsubscribeFromTopic($topic, $registrationTokenOrTokens): array
     {
         return $this->unsubscribeFromTopics([$topic], $registrationTokenOrTokens);
     }
 
-    public function unsubscribeFromTopics(array $topics, RegistrationTokens|RegistrationToken|array|string $registrationTokenOrTokens): array
+    /**
+     * @param RegistrationTokens|RegistrationToken|mixed[]|string $registrationTokenOrTokens
+     */
+    public function unsubscribeFromTopics(array $topics, $registrationTokenOrTokens): array
     {
         $topics = array_map(
             static fn($topic): Topic => $topic instanceof Topic ? $topic : Topic::fromValue($topic),
@@ -201,7 +226,10 @@ final class Messaging implements Contract\Messaging
         return $result;
     }
 
-    public function getAppInstance(RegistrationToken|string $registrationToken): AppInstance
+    /**
+     * @param RegistrationToken|string $registrationToken
+     */
+    public function getAppInstance($registrationToken): AppInstance
     {
         $token = $registrationToken instanceof RegistrationToken
             ? $registrationToken
@@ -238,7 +266,7 @@ final class Messaging implements Contract\Messaging
      *
      * @throws InvalidArgumentException
      */
-    private function makeMessage(Message|array $message): CloudMessage
+    private function makeMessage($message): CloudMessage
     {
         $message = $message instanceof Message ? $message : CloudMessage::fromArray($message);
 

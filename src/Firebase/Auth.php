@@ -61,19 +61,45 @@ use function trim;
  */
 final class Auth implements Contract\Auth
 {
-    private readonly Parser $jwtParser;
+    /**
+     * @readonly
+     */
+    private ApiClient $client;
+    /**
+     * @readonly
+     */
+    private ?CustomTokenViaGoogleCredentials $tokenGenerator;
+    /**
+     * @readonly
+     */
+    private IdTokenVerifier $idTokenVerifier;
+    /**
+     * @readonly
+     */
+    private SessionCookieVerifier $sessionCookieVerifier;
+    /**
+     * @readonly
+     */
+    private ClockInterface $clock;
+    /**
+     * @readonly
+     */
+    private Parser $jwtParser;
 
-    public function __construct(
-        private readonly ApiClient $client,
-        private readonly ?CustomTokenViaGoogleCredentials $tokenGenerator,
-        private readonly IdTokenVerifier $idTokenVerifier,
-        private readonly SessionCookieVerifier $sessionCookieVerifier,
-        private readonly ClockInterface $clock,
-    ) {
+    public function __construct(ApiClient $client, ?CustomTokenViaGoogleCredentials $tokenGenerator, IdTokenVerifier $idTokenVerifier, SessionCookieVerifier $sessionCookieVerifier, ClockInterface $clock)
+    {
+        $this->client = $client;
+        $this->tokenGenerator = $tokenGenerator;
+        $this->idTokenVerifier = $idTokenVerifier;
+        $this->sessionCookieVerifier = $sessionCookieVerifier;
+        $this->clock = $clock;
         $this->jwtParser = new Parser(new JoseEncoder());
     }
 
-    public function getUser(Stringable|string $uid): UserRecord
+    /**
+     * @param Stringable|string $uid
+     */
+    public function getUser($uid): UserRecord
     {
         $uid = Uid::fromString($uid)->value;
 
@@ -104,7 +130,10 @@ final class Auth implements Contract\Auth
         return $users;
     }
 
-    public function queryUsers(UserQuery|array $query): array
+    /**
+     * @param UserQuery|mixed[] $query
+     */
+    public function queryUsers($query): array
     {
         $userQuery = $query instanceof UserQuery ? $query : UserQuery::fromArray($query);
 
@@ -147,7 +176,10 @@ final class Auth implements Contract\Auth
         } while ($pageToken);
     }
 
-    public function createUser(array|CreateUser $properties): UserRecord
+    /**
+     * @param mixed[]|CreateUser $properties
+     */
+    public function createUser($properties): UserRecord
     {
         $request = $properties instanceof CreateUser
             ? $properties
@@ -158,7 +190,11 @@ final class Auth implements Contract\Auth
         return $this->getUserRecordFromResponse($response);
     }
 
-    public function updateUser(Stringable|string $uid, array|UpdateUser $properties): UserRecord
+    /**
+     * @param Stringable|string $uid
+     * @param mixed[]|UpdateUser $properties
+     */
+    public function updateUser($uid, $properties): UserRecord
     {
         $request = $properties instanceof UpdateUser
             ? $properties
@@ -171,7 +207,11 @@ final class Auth implements Contract\Auth
         return $this->getUserRecordFromResponse($response);
     }
 
-    public function createUserWithEmailAndPassword(Stringable|string $email, Stringable|string $password): UserRecord
+    /**
+     * @param Stringable|string $email
+     * @param Stringable|string $password
+     */
+    public function createUserWithEmailAndPassword($email, $password): UserRecord
     {
         return $this->createUser(
             CreateUser::new()
@@ -180,7 +220,10 @@ final class Auth implements Contract\Auth
         );
     }
 
-    public function getUserByEmail(Stringable|string $email): UserRecord
+    /**
+     * @param Stringable|string $email
+     */
+    public function getUserByEmail($email): UserRecord
     {
         $email = Email::fromString((string) $email)->value;
 
@@ -195,7 +238,10 @@ final class Auth implements Contract\Auth
         return UserRecord::fromResponseData($data['users'][0]);
     }
 
-    public function getUserByPhoneNumber(Stringable|string $phoneNumber): UserRecord
+    /**
+     * @param Stringable|string $phoneNumber
+     */
+    public function getUserByPhoneNumber($phoneNumber): UserRecord
     {
         $phoneNumber = (string) $phoneNumber;
 
@@ -215,33 +261,50 @@ final class Auth implements Contract\Auth
         return $this->createUser(CreateUser::new());
     }
 
-    public function changeUserPassword(Stringable|string $uid, Stringable|string $newPassword): UserRecord
+    /**
+     * @param Stringable|string $uid
+     * @param Stringable|string $newPassword
+     */
+    public function changeUserPassword($uid, $newPassword): UserRecord
     {
         return $this->updateUser($uid, UpdateUser::new()->withClearTextPassword($newPassword));
     }
 
-    public function changeUserEmail(Stringable|string $uid, Stringable|string $newEmail): UserRecord
+    /**
+     * @param Stringable|string $uid
+     * @param Stringable|string $newEmail
+     */
+    public function changeUserEmail($uid, $newEmail): UserRecord
     {
         return $this->updateUser($uid, UpdateUser::new()->withEmail($newEmail));
     }
 
-    public function enableUser(Stringable|string $uid): UserRecord
+    /**
+     * @param Stringable|string $uid
+     */
+    public function enableUser($uid): UserRecord
     {
         return $this->updateUser($uid, UpdateUser::new()->markAsEnabled());
     }
 
-    public function disableUser(Stringable|string $uid): UserRecord
+    /**
+     * @param Stringable|string $uid
+     */
+    public function disableUser($uid): UserRecord
     {
         return $this->updateUser($uid, UpdateUser::new()->markAsDisabled());
     }
 
-    public function deleteUser(Stringable|string $uid): void
+    /**
+     * @param Stringable|string $uid
+     */
+    public function deleteUser($uid): void
     {
         $uid = Uid::fromString($uid)->value;
 
         try {
             $this->client->deleteUser($uid);
-        } catch (UserNotFound) {
+        } catch (UserNotFound $exception) {
             throw new UserNotFound("No user with uid '{$uid}' found.");
         }
     }
@@ -258,7 +321,10 @@ final class Auth implements Contract\Auth
         return DeleteUsersResult::fromRequestAndResponse($request, $response);
     }
 
-    public function getEmailActionLink(string $type, Stringable|string $email, $actionCodeSettings = null, ?string $locale = null): string
+    /**
+     * @param Stringable|string $email
+     */
+    public function getEmailActionLink(string $type, $email, $actionCodeSettings = null, ?string $locale = null): string
     {
         $email = Email::fromString((string) $email)->value;
 
@@ -273,7 +339,10 @@ final class Auth implements Contract\Auth
         return $this->client->getEmailActionLink($type, $email, $actionCodeSettings, $locale);
     }
 
-    public function sendEmailActionLink(string $type, Stringable|string $email, $actionCodeSettings = null, ?string $locale = null): void
+    /**
+     * @param Stringable|string $email
+     */
+    public function sendEmailActionLink(string $type, $email, $actionCodeSettings = null, ?string $locale = null): void
     {
         $email = Email::fromString((string) $email)->value;
 
@@ -310,37 +379,58 @@ final class Auth implements Contract\Auth
         $this->client->sendEmailActionLink($type, $email, $actionCodeSettings, $locale, $idToken);
     }
 
-    public function getEmailVerificationLink(Stringable|string $email, $actionCodeSettings = null, ?string $locale = null): string
+    /**
+     * @param Stringable|string $email
+     */
+    public function getEmailVerificationLink($email, $actionCodeSettings = null, ?string $locale = null): string
     {
         return $this->getEmailActionLink('VERIFY_EMAIL', $email, $actionCodeSettings, $locale);
     }
 
-    public function sendEmailVerificationLink(Stringable|string $email, $actionCodeSettings = null, ?string $locale = null): void
+    /**
+     * @param Stringable|string $email
+     */
+    public function sendEmailVerificationLink($email, $actionCodeSettings = null, ?string $locale = null): void
     {
         $this->sendEmailActionLink('VERIFY_EMAIL', $email, $actionCodeSettings, $locale);
     }
 
-    public function getPasswordResetLink(Stringable|string $email, $actionCodeSettings = null, ?string $locale = null): string
+    /**
+     * @param Stringable|string $email
+     */
+    public function getPasswordResetLink($email, $actionCodeSettings = null, ?string $locale = null): string
     {
         return $this->getEmailActionLink('PASSWORD_RESET', $email, $actionCodeSettings, $locale);
     }
 
-    public function sendPasswordResetLink(Stringable|string $email, $actionCodeSettings = null, ?string $locale = null): void
+    /**
+     * @param Stringable|string $email
+     */
+    public function sendPasswordResetLink($email, $actionCodeSettings = null, ?string $locale = null): void
     {
         $this->sendEmailActionLink('PASSWORD_RESET', $email, $actionCodeSettings, $locale);
     }
 
-    public function getSignInWithEmailLink(Stringable|string $email, $actionCodeSettings = null, ?string $locale = null): string
+    /**
+     * @param Stringable|string $email
+     */
+    public function getSignInWithEmailLink($email, $actionCodeSettings = null, ?string $locale = null): string
     {
         return $this->getEmailActionLink('EMAIL_SIGNIN', $email, $actionCodeSettings, $locale);
     }
 
-    public function sendSignInWithEmailLink(Stringable|string $email, $actionCodeSettings = null, ?string $locale = null): void
+    /**
+     * @param Stringable|string $email
+     */
+    public function sendSignInWithEmailLink($email, $actionCodeSettings = null, ?string $locale = null): void
     {
         $this->sendEmailActionLink('EMAIL_SIGNIN', $email, $actionCodeSettings, $locale);
     }
 
-    public function setCustomUserClaims(Stringable|string $uid, ?array $claims): void
+    /**
+     * @param Stringable|string $uid
+     */
+    public function setCustomUserClaims($uid, ?array $claims): void
     {
         $uid = Uid::fromString($uid)->value;
         $claims ??= [];
@@ -348,7 +438,10 @@ final class Auth implements Contract\Auth
         $this->client->setCustomUserClaims($uid, $claims);
     }
 
-    public function createCustomToken(Stringable|string $uid, array $claims = [], $ttl = 3600): UnencryptedToken
+    /**
+     * @param Stringable|string $uid
+     */
+    public function createCustomToken($uid, array $claims = [], $ttl = 3600): UnencryptedToken
     {
         if (!$this->tokenGenerator) {
             throw new AuthError('Custom Token Generation is disabled because the current credentials do not permit it');
@@ -476,7 +569,10 @@ final class Auth implements Contract\Auth
         return $email;
     }
 
-    public function revokeRefreshTokens(Stringable|string $uid): void
+    /**
+     * @param Stringable|string $uid
+     */
+    public function revokeRefreshTokens($uid): void
     {
         $uid = Uid::fromString($uid)->value;
 

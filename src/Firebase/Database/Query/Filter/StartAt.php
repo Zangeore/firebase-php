@@ -14,10 +14,19 @@ use Psr\Http\Message\UriInterface;
  */
 final class StartAt implements Filter
 {
+    /**
+     * @readonly
+     * @var bool|float|int|string
+     */
+    private $value;
     use ModifierTrait;
 
-    public function __construct(private readonly int|float|string|bool $value)
+    /**
+     * @param int|float|string|bool $value
+     */
+    public function __construct($value)
     {
+        $this->value = $value;
     }
 
     public function modifyUri(UriInterface $uri): UriInterface

@@ -18,16 +18,18 @@ use function array_filter;
  */
 final class Notification implements JsonSerializable
 {
+    private ?string $title = null;
+    private ?string $body = null;
+    private ?string $imageUrl = null;
     /**
      * @throws InvalidArgumentException if both title and body are null
      */
-    private function __construct(
-        private ?string $title = null,
-        private ?string $body = null,
-        private ?string $imageUrl = null,
-    ) {
+    private function __construct(?string $title = null, ?string $body = null, ?string $imageUrl = null)
+    {
+        $this->title = $title;
+        $this->body = $body;
+        $this->imageUrl = $imageUrl;
     }
-
     /**
      * @throws InvalidArgumentException if both title and body are null
      */

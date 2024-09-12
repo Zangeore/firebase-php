@@ -23,7 +23,11 @@ final class OrderByKey implements Sorter
         return $this->appendQueryParam($uri, 'orderBy', '"$key"');
     }
 
-    public function modifyValue(mixed $value): mixed
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
+    public function modifyValue($value)
     {
         if (!is_array($value)) {
             return $value;

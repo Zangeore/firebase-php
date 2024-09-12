@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Kreait\Firebase\Tests\Unit\Auth;
 
 use Kreait\Firebase\Auth\ProjectAwareAuthResourceUrlBuilder;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use function putenv;
@@ -27,39 +26,30 @@ final class ProjectAwareAuthResourceUrlBuilderTest extends TestCase
         $this->builder = ProjectAwareAuthResourceUrlBuilder::forProject($this->projectId);
     }
 
-    #[Test]
     public function itUsesTheGivenProjectId(): void
     {
         $this->assertStringContainsString($this->projectId, $this->builder->getUrl());
     }
 
-    #[Test]
     public function itUsesAnEmulatorHostIfProvidedByEnvironmentVariable(): void
     {
         putenv('FIREBASE_AUTH_EMULATOR_HOST=localhost:1234');
-
         $builder = ProjectAwareAuthResourceUrlBuilder::forProject($this->projectId);
-
         $this->assertStringContainsString('localhost:1234', $builder->getUrl());
     }
 
-    #[Test]
     public function itDoesNotUseTheEmulatorHostWhenItIsEmpty(): void
     {
         putenv('FIREBASE_AUTH_EMULATOR_HOST=');
-
         $builder = ProjectAwareAuthResourceUrlBuilder::forProject($this->projectId);
-
         $this->assertStringNotContainsString('{host}', $builder->getUrl());
     }
 
-    #[Test]
     public function itReplacesTheApiWithAnEmptyStringWhenItIsNotProvided(): void
     {
         $this->assertStringNotContainsString('{api}', $this->builder->getUrl());
     }
 
-    #[Test]
     public function itUsesTheRequestedApi(): void
     {
         $url = $this->builder->getUrl('foo');
@@ -67,14 +57,12 @@ final class ProjectAwareAuthResourceUrlBuilderTest extends TestCase
         $this->assertStringContainsString('foo', $url);
     }
 
-    #[Test]
     public function itUsesTheGivenParameters(): void
     {
         $url = $this->builder->getUrl('', ['first' => 'value', 'second' => 'value']);
         $this->assertStringContainsString('?first=value&second=value', $url);
     }
 
-    #[Test]
     public function itDoesNotHaveQueryParamsWhenNoneAreProvided(): void
     {
         $url = $this->builder->getUrl();

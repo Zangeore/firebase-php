@@ -15,6 +15,11 @@ use JsonSerializable;
  */
 final class ParameterGroup implements JsonSerializable
 {
+    /**
+     * @var non-empty-string
+     * @readonly
+     */
+    private string $name;
     private string $description = '';
 
     /**
@@ -25,8 +30,9 @@ final class ParameterGroup implements JsonSerializable
     /**
      * @param non-empty-string $name
      */
-    private function __construct(private readonly string $name)
+    private function __construct(string $name)
     {
+        $this->name = $name;
     }
 
     /**

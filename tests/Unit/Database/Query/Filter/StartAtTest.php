@@ -8,20 +8,18 @@ use GuzzleHttp\Psr7\Uri;
 use Iterator;
 use Kreait\Firebase\Database\Query\Filter\StartAt;
 use Kreait\Firebase\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 
 /**
  * @internal
  */
 final class StartAtTest extends UnitTestCase
 {
-    #[DataProvider('valueProvider')]
-    #[Test]
-    public function modifyUri(mixed $given, string $expected): void
+    /**
+     * @param mixed $given
+     */
+    public function modifyUri($given, string $expected): void
     {
         $filter = new StartAt($given);
-
         $this->assertStringContainsString($expected, (string) $filter->modifyUri(new Uri('http://example.com')));
     }
 

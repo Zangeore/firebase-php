@@ -16,10 +16,16 @@ use JsonSerializable;
 final class AndroidInfo implements JsonSerializable
 {
     /**
+     * @var AndroidInfoShape
+     * @readonly
+     */
+    private array $data;
+    /**
      * @param AndroidInfoShape $data
      */
-    private function __construct(private readonly array $data)
+    private function __construct(array $data)
     {
+        $this->data = $data;
     }
 
     /**

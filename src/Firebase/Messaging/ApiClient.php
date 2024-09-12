@@ -15,13 +15,24 @@ use Psr\Http\Message\RequestInterface;
  */
 class ApiClient
 {
-    public function __construct(
-        private readonly ClientInterface $client,
-        private readonly string $projectId,
-        private readonly RequestFactory $requestFactory,
-    ) {
+    /**
+     * @readonly
+     */
+    private ClientInterface $client;
+    /**
+     * @readonly
+     */
+    private string $projectId;
+    /**
+     * @readonly
+     */
+    private RequestFactory $requestFactory;
+    public function __construct(ClientInterface $client, string $projectId, RequestFactory $requestFactory)
+    {
+        $this->client = $client;
+        $this->projectId = $projectId;
+        $this->requestFactory = $requestFactory;
     }
-
     public function createSendRequestForMessage(Message $message, bool $validateOnly): RequestInterface
     {
         return $this->requestFactory->createRequest($message, $this->projectId, $validateOnly);
@@ -31,7 +42,7 @@ class ApiClient
      * @param list<RequestInterface>|Iterator<RequestInterface> $requests
      * @param array<string, mixed> $config
      */
-    public function pool(array|Iterator $requests, array $config): PromiseInterface
+    public function pool($requests, array $config): PromiseInterface
     {
         $pool = new Pool($this->client, $requests, $config);
 

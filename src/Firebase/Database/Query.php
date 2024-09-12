@@ -21,7 +21,6 @@ use Kreait\Firebase\Exception\Database\DatabaseNotFound;
 use Kreait\Firebase\Exception\Database\UnsupportedQuery;
 use Kreait\Firebase\Exception\DatabaseException;
 use Psr\Http\Message\UriInterface;
-use Stringable;
 
 /**
  * A Query sorts and filters the data at a database location so only a subset of the child data is included.
@@ -34,21 +33,29 @@ use Stringable;
  * {@see getSnapshot()} or {@see getValue()} method. You will only receive
  * Snapshots for the subset of the data that matches your query.
  */
-class Query implements Stringable
+class Query
 {
+    /**
+     * @readonly
+     */
+    private Reference $reference;
+    /**
+     * @readonly
+     */
+    private ApiClient $apiClient;
     /**
      * @var Filter[]
      */
     private array $filters = [];
     private ?Sorter $sorter = null;
-
     /**
      * @internal
      */
-    public function __construct(private readonly Reference $reference, private readonly ApiClient $apiClient)
+    public function __construct(Reference $reference, ApiClient $apiClient)
     {
+        $this->reference = $reference;
+        $this->apiClient = $apiClient;
     }
-
     /**
      * Returns the absolute URL for this location.
      *
@@ -58,7 +65,6 @@ class Query implements Stringable
     {
         return (string) $this->getUri();
     }
-
     /**
      * Returns a Reference to the Query's location.
      */
@@ -66,7 +72,6 @@ class Query implements Stringable
     {
         return $this->reference;
     }
-
     /**
      * Returns a data snapshot of the current location.
      *
@@ -96,17 +101,16 @@ class Query implements Stringable
 
         return new Snapshot($this->reference, $value);
     }
-
     /**
      * Convenience method for {@see getSnapshot()}->getValue().
      *
      * @throws UnsupportedQuery if an error occurred
+     * @return mixed
      */
-    public function getValue(): mixed
+    public function getValue()
     {
         return $this->getSnapshot()->getValue();
     }
-
     /**
      * Creates a Query with the specified ending point.
      *
@@ -119,7 +123,6 @@ class Query implements Stringable
     {
         return $this->withAddedFilter(new EndAt($value));
     }
-
     /**
      * Creates a Query with the specified ending point (exclusive).
      *
@@ -129,7 +132,6 @@ class Query implements Stringable
     {
         return $this->withAddedFilter(new EndBefore($value));
     }
-
     /**
      * Creates a Query which includes children which match the specified value.
      *
@@ -139,7 +141,6 @@ class Query implements Stringable
     {
         return $this->withAddedFilter(new EqualTo($value));
     }
-
     /**
      * Creates a Query with the specified starting point (inclusive).
      *
@@ -149,7 +150,6 @@ class Query implements Stringable
     {
         return $this->withAddedFilter(new StartAt($value));
     }
-
     /**
      * Creates a Query with the specified starting point (exclusive).
      *
@@ -159,7 +159,6 @@ class Query implements Stringable
     {
         return $this->withAddedFilter(new StartAfter($value));
     }
-
     /**
      * Generates a new Query limited to the first specific number of children.
      */
@@ -167,7 +166,6 @@ class Query implements Stringable
     {
         return $this->withAddedFilter(new LimitToFirst($limit));
     }
-
     /**
      * Generates a new Query object limited to the last specific number of children.
      */
@@ -175,7 +173,6 @@ class Query implements Stringable
     {
         return $this->withAddedFilter(new LimitToLast($limit));
     }
-
     /**
      * Generates a new Query object ordered by the specified child key.
      *
@@ -188,7 +185,6 @@ class Query implements Stringable
     {
         return $this->withSorter(new OrderByChild($childKey));
     }
-
     /**
      * Generates a new Query object ordered by key.
      *
@@ -203,7 +199,6 @@ class Query implements Stringable
     {
         return $this->withSorter(new OrderByKey());
     }
-
     /**
      * Generates a new Query object ordered by child values.
      *
@@ -219,7 +214,6 @@ class Query implements Stringable
     {
         return $this->withSorter(new OrderByValue());
     }
-
     /**
      * This is an advanced feature, designed to help you work with large datasets without needing to download
      * everything. Set this to true to limit the depth of the data returned at a location. If the data at
@@ -234,7 +228,6 @@ class Query implements Stringable
     {
         return $this->withAddedFilter(new Shallow());
     }
-
     /**
      * Returns the absolute URL for this location.
      *
@@ -259,7 +252,6 @@ class Query implements Stringable
 
         return $uri;
     }
-
     private function withAddedFilter(Filter $filter): self
     {
         $query = clone $this;
@@ -267,7 +259,6 @@ class Query implements Stringable
 
         return $query;
     }
-
     private function withSorter(Sorter $sorter): self
     {
         if ($this->sorter !== null) {

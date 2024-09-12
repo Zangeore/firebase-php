@@ -28,6 +28,7 @@ use function implode;
  */
 final class CloudMessage implements Message
 {
+    private MessageTarget $target;
     private MessageData $data;
     private Notification $notification;
     private AndroidConfig $androidConfig;
@@ -35,9 +36,9 @@ final class CloudMessage implements Message
     private WebPushConfig $webPushConfig;
     private FcmOptions $fcmOptions;
 
-    private function __construct(
-        private MessageTarget $target,
-    ) {
+    private function __construct(MessageTarget $target)
+    {
+        $this->target = $target;
         $this->data = MessageData::fromArray([]);
         $this->notification = Notification::fromArray([]);
         $this->androidConfig = AndroidConfig::fromArray([]);
@@ -120,7 +121,7 @@ final class CloudMessage implements Message
      *
      * @throws InvalidArgumentException
      */
-    public function withData(MessageData|array $data): self
+    public function withData($data): self
     {
         $new = clone $this;
         $new->data = $data instanceof MessageData ? $data : MessageData::fromArray($data);
@@ -133,7 +134,7 @@ final class CloudMessage implements Message
      *
      * @throws InvalidArgumentException
      */
-    public function withNotification(Notification|array $notification): self
+    public function withNotification($notification): self
     {
         $new = clone $this;
         $new->notification = $notification instanceof Notification ? $notification : Notification::fromArray($notification);

@@ -6,14 +6,12 @@ namespace Kreait\Firebase\Tests\Unit\AppCheck;
 
 use Kreait\Firebase\AppCheck\DecodedAppCheckToken;
 use Kreait\Firebase\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 /**
  * @internal
  */
 final class DecodedAppCheckTokenTest extends UnitTestCase
 {
-    #[Test]
     public function createFromValidArray(): void
     {
         $options = DecodedAppCheckToken::fromArray([
@@ -23,7 +21,6 @@ final class DecodedAppCheckTokenTest extends UnitTestCase
             'iss' => $iss = 'https://firebaseappcheck.googleapis.com/111111111111',
             'sub' => $sub = '1:111111111111:android:0000000000000000000000',
         ]);
-
         $this->assertSame($sub, $options->app_id);
         $this->assertSame($aud, $options->aud);
         $this->assertSame($exp, $options->exp);

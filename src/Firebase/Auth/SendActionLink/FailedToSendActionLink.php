@@ -22,7 +22,7 @@ final class FailedToSendActionLink extends RuntimeException implements AuthExcep
 
         try {
             $message = Json::decode((string) $response->getBody(), true)['error']['message'] ?? $fallbackMessage;
-        } catch (InvalidArgumentException) {
+        } catch (InvalidArgumentException $exception) {
             $message = $fallbackMessage;
         }
 

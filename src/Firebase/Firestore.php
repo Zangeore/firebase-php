@@ -11,8 +11,13 @@ use Google\Cloud\Firestore\FirestoreClient;
  */
 final class Firestore implements Contract\Firestore
 {
-    private function __construct(private readonly FirestoreClient $client)
+    /**
+     * @readonly
+     */
+    private FirestoreClient $client;
+    private function __construct(FirestoreClient $client)
     {
+        $this->client = $client;
     }
 
     public static function withFirestoreClient(FirestoreClient $firestoreClient): self

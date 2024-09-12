@@ -19,10 +19,15 @@ use function uasort;
  */
 final class OrderByChild implements Sorter
 {
+    /**
+     * @readonly
+     */
+    private string $childKey;
     use ModifierTrait;
 
-    public function __construct(private readonly string $childKey)
+    public function __construct(string $childKey)
     {
+        $this->childKey = $childKey;
     }
 
     public function modifyUri(UriInterface $uri): UriInterface
@@ -30,7 +35,11 @@ final class OrderByChild implements Sorter
         return $this->appendQueryParam($uri, 'orderBy', sprintf('"%s"', $this->childKey));
     }
 
-    public function modifyValue(mixed $value): mixed
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
+    public function modifyValue($value)
     {
         if (!is_array($value)) {
             return $value;

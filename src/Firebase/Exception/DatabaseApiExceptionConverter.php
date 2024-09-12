@@ -20,7 +20,10 @@ use Throwable;
  */
 class DatabaseApiExceptionConverter
 {
-    private readonly ErrorResponseParser $responseParser;
+    /**
+     * @readonly
+     */
+    private ErrorResponseParser $responseParser;
 
     public function __construct()
     {
@@ -51,11 +54,16 @@ class DatabaseApiExceptionConverter
             $code = $response->getStatusCode();
         }
 
-        return match ($code) {
-            StatusCode::STATUS_UNAUTHORIZED, StatusCode::STATUS_FORBIDDEN => new PermissionDenied($message, $code, $e),
-            StatusCode::STATUS_PRECONDITION_FAILED => new PreconditionFailed($message, $code, $e),
-            StatusCode::STATUS_NOT_FOUND => DatabaseNotFound::fromUri($e->getRequest()->getUri()),
-            default => new DatabaseError($message, $code, $e),
-        };
+        switch ($code) {
+            case StatusCode::STATUS_UNAUTHORIZED:
+            case StatusCode::STATUS_FORBIDDEN:
+                return new PermissionDenied($message, $code, $e);
+            case StatusCode::STATUS_PRECONDITION_FAILED:
+                return new PreconditionFailed($message, $code, $e);
+            case StatusCode::STATUS_NOT_FOUND:
+                return DatabaseNotFound::fromUri($e->getRequest()->getUri());
+            default:
+                return new DatabaseError($message, $code, $e);
+        }
     }
 }

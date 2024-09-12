@@ -18,11 +18,22 @@ use function array_filter;
  */
 class ApiClient
 {
-    private readonly RemoteConfigApiExceptionConverter $errorHandler;
-    private readonly string $baseUri;
+    /**
+     * @readonly
+     */
+    private ClientInterface $client;
+    /**
+     * @readonly
+     */
+    private RemoteConfigApiExceptionConverter $errorHandler;
+    /**
+     * @readonly
+     */
+    private string $baseUri;
 
-    public function __construct(string $projectId, private readonly ClientInterface $client)
+    public function __construct(string $projectId, ClientInterface $client)
     {
+        $this->client = $client;
         $this->baseUri = "https://firebaseremoteconfig.googleapis.com/v1/projects/{$projectId}/remoteConfig";
         $this->errorHandler = new RemoteConfigApiExceptionConverter();
     }
@@ -31,8 +42,9 @@ class ApiClient
      * @see https://firebase.google.com/docs/reference/remote-config/rest/v1/projects/getRemoteConfig
      *
      * @throws RemoteConfigException
+     * @param VersionNumber|int|string|null $versionNumber
      */
-    public function getTemplate(VersionNumber|int|string|null $versionNumber = null): ResponseInterface
+    public function getTemplate($versionNumber = null): ResponseInterface
     {
         return $this->requestApi('GET', 'remoteConfig', [
             'query' => array_filter([
@@ -86,8 +98,8 @@ class ApiClient
         $lastVersionNumber = $query->lastVersionNumber();
         $pageSize = $query->pageSize();
 
-        $since = $since?->format('Y-m-d\TH:i:s.v\Z');
-        $until = $until?->format('Y-m-d\TH:i:s.v\Z');
+        $since = ($nullsafeVariable1 = $since) ? $nullsafeVariable1->format('Y-m-d\TH:i:s.v\Z') : null;
+        $until = ($nullsafeVariable2 = $until) ? $nullsafeVariable2->format('Y-m-d\TH:i:s.v\Z') : null;
         $lastVersionNumber = $lastVersionNumber !== null ? (string) $lastVersionNumber : null;
         $pageSize = $pageSize ? (string) $pageSize : null;
 

@@ -40,6 +40,76 @@ use function array_map;
 final class UserRecord
 {
     /**
+     * @var non-empty-string
+     * @readonly
+     */
+    public string $uid;
+    /**
+     * @var non-empty-string|null
+     * @readonly
+     */
+    public ?string $email;
+    /**
+     * @readonly
+     */
+    public bool $emailVerified;
+    /**
+     * @var non-empty-string|null
+     * @readonly
+     */
+    public ?string $displayName;
+    /**
+     * @var non-empty-string|null
+     * @readonly
+     */
+    public ?string $phoneNumber;
+    /**
+     * @var non-empty-string|null
+     * @readonly
+     */
+    public ?string $photoUrl;
+    /**
+     * @readonly
+     */
+    public bool $disabled;
+    /**
+     * @readonly
+     */
+    public UserMetaData $metadata;
+    /**
+     * @var list<UserInfo>
+     * @readonly
+     */
+    public array $providerData;
+    /**
+     * @readonly
+     */
+    public ?MfaInfo $mfaInfo;
+    /**
+     * @var non-empty-string|null
+     * @readonly
+     */
+    public ?string $passwordHash;
+    /**
+     * @var non-empty-string|null
+     * @readonly
+     */
+    public ?string $passwordSalt;
+    /**
+     * @var array<non-empty-string, mixed>
+     * @readonly
+     */
+    public array $customClaims;
+    /**
+     * @var non-empty-string|null
+     * @readonly
+     */
+    public ?string $tenantId;
+    /**
+     * @readonly
+     */
+    public ?DateTimeImmutable $tokensValidAfterTime;
+    /**
      * @param non-empty-string $uid
      * @param non-empty-string|null $email
      * @param non-empty-string|null $displayName
@@ -51,25 +121,24 @@ final class UserRecord
      * @param array<non-empty-string, mixed> $customClaims
      * @param non-empty-string|null $tenantId
      */
-    public function __construct(
-        public readonly string $uid,
-        public readonly ?string $email,
-        public readonly bool $emailVerified,
-        public readonly ?string $displayName,
-        public readonly ?string $phoneNumber,
-        public readonly ?string $photoUrl,
-        public readonly bool $disabled,
-        public readonly UserMetaData $metadata,
-        public readonly array $providerData,
-        public readonly ?MfaInfo $mfaInfo,
-        public readonly ?string $passwordHash,
-        public readonly ?string $passwordSalt,
-        public readonly array $customClaims,
-        public readonly ?string $tenantId,
-        public readonly ?DateTimeImmutable $tokensValidAfterTime,
-    ) {
+    public function __construct(string $uid, ?string $email, bool $emailVerified, ?string $displayName, ?string $phoneNumber, ?string $photoUrl, bool $disabled, UserMetaData $metadata, array $providerData, ?MfaInfo $mfaInfo, ?string $passwordHash, ?string $passwordSalt, array $customClaims, ?string $tenantId, ?DateTimeImmutable $tokensValidAfterTime)
+    {
+        $this->uid = $uid;
+        $this->email = $email;
+        $this->emailVerified = $emailVerified;
+        $this->displayName = $displayName;
+        $this->phoneNumber = $phoneNumber;
+        $this->photoUrl = $photoUrl;
+        $this->disabled = $disabled;
+        $this->metadata = $metadata;
+        $this->providerData = $providerData;
+        $this->mfaInfo = $mfaInfo;
+        $this->passwordHash = $passwordHash;
+        $this->passwordSalt = $passwordSalt;
+        $this->customClaims = $customClaims;
+        $this->tenantId = $tenantId;
+        $this->tokensValidAfterTime = $tokensValidAfterTime;
     }
-
     /**
      * @internal
      *

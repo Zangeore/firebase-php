@@ -14,18 +14,30 @@ use Psr\Clock\ClockInterface;
  */
 final class AppCheckTokenGenerator
 {
+    /**
+     * @var non-empty-string
+     * @readonly
+     */
+    private string $clientEmail;
+    /**
+     * @var non-empty-string
+     * @readonly
+     */
+    private string $privateKey;
     private const APP_CHECK_AUDIENCE = 'https://firebaseappcheck.googleapis.com/google.firebase.appcheck.v1.TokenExchangeService';
-    private readonly ClockInterface $clock;
+    /**
+     * @readonly
+     */
+    private ClockInterface $clock;
 
     /**
      * @param non-empty-string $clientEmail
      * @param non-empty-string $privateKey
      */
-    public function __construct(
-        private readonly string $clientEmail,
-        private readonly string $privateKey,
-        ?ClockInterface $clock = null,
-    ) {
+    public function __construct(string $clientEmail, string $privateKey, ?ClockInterface $clock = null)
+    {
+        $this->clientEmail = $clientEmail;
+        $this->privateKey = $privateKey;
         $this->clock = $clock ?? SystemClock::create();
     }
 

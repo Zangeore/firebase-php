@@ -9,10 +9,15 @@ namespace Kreait\Firebase\Auth;
  */
 final class SignInWithCustomToken implements IsTenantAware, SignIn
 {
+    /**
+     * @readonly
+     */
+    private string $customToken;
     private ?string $tenantId = null;
 
-    private function __construct(private readonly string $customToken)
+    private function __construct(string $customToken)
     {
+        $this->customToken = $customToken;
     }
 
     public static function fromValue(string $customToken): self

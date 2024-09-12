@@ -6,22 +6,26 @@ namespace Kreait\Firebase\Messaging;
 
 use JsonSerializable;
 use Kreait\Firebase\Exception\Messaging\InvalidArgument;
-use Stringable;
 
 use function preg_match;
 use function preg_replace;
 use function sprintf;
 use function trim;
 
-final class Topic implements JsonSerializable, Stringable
+final class Topic implements JsonSerializable
 {
+    /**
+     * @var non-empty-string
+     * @readonly
+     */
+    private string $value;
     /**
      * @param non-empty-string $value
      */
-    private function __construct(private readonly string $value)
+    private function __construct(string $value)
     {
+        $this->value = $value;
     }
-
     /**
      * @return non-empty-string
      */
@@ -29,7 +33,6 @@ final class Topic implements JsonSerializable, Stringable
     {
         return $this->value;
     }
-
     /**
      * @param non-empty-string $value
      */
@@ -47,7 +50,6 @@ final class Topic implements JsonSerializable, Stringable
 
         return new self($value);
     }
-
     /**
      * @return non-empty-string
      */
@@ -55,7 +57,6 @@ final class Topic implements JsonSerializable, Stringable
     {
         return $this->value;
     }
-
     public function jsonSerialize(): string
     {
         return $this->value;

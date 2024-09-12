@@ -22,7 +22,10 @@ use function mb_stripos;
  */
 class RemoteConfigApiExceptionConverter
 {
-    private readonly ErrorResponseParser $responseParser;
+    /**
+     * @readonly
+     */
+    private ErrorResponseParser $responseParser;
 
     public function __construct()
     {

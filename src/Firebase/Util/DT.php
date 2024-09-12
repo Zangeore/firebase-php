@@ -26,7 +26,10 @@ use function time;
  */
 final class DT
 {
-    public static function toUTCDateTimeImmutable(mixed $value): DateTimeImmutable
+    /**
+     * @param mixed $value
+     */
+    public static function toUTCDateTimeImmutable($value): DateTimeImmutable
     {
         $tz = new DateTimeZone('UTC');
         $now = time();

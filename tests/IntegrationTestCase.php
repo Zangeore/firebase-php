@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase\Tests;
 
+use Closure;
 use Beste\Json;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Util;
@@ -110,8 +111,8 @@ abstract class IntegrationTestCase extends FirebaseTestCase
     private static function registrationTokensFromEnvironment(): array
     {
         $tokens = Json::decode(Util::getenv('TEST_REGISTRATION_TOKENS') ?? '', true);
-        $tokens = array_map(strval(...), $tokens);
-        $tokens = array_map(trim(...), $tokens);
+        $tokens = array_map(Closure::fromCallable('strval'), $tokens);
+        $tokens = array_map(Closure::fromCallable('trim'), $tokens);
         $tokens = array_filter($tokens, fn($token): bool => $token !== '');
 
         return array_values($tokens);

@@ -21,12 +21,19 @@ use function array_key_exists;
  */
 final class AnalyticsInfo implements JsonSerializable
 {
-    private function __construct(
-        private readonly ?GooglePlayAnalytics $googlePlayAnalytics,
-        private readonly ?ITunesConnectAnalytics $iTunesConnectAnalytics,
-    ) {
+    /**
+     * @readonly
+     */
+    private ?GooglePlayAnalytics $googlePlayAnalytics;
+    /**
+     * @readonly
+     */
+    private ?ITunesConnectAnalytics $iTunesConnectAnalytics;
+    private function __construct(?GooglePlayAnalytics $googlePlayAnalytics, ?ITunesConnectAnalytics $iTunesConnectAnalytics)
+    {
+        $this->googlePlayAnalytics = $googlePlayAnalytics;
+        $this->iTunesConnectAnalytics = $iTunesConnectAnalytics;
     }
-
     /**
      * @param AnalyticsInfoShape $data
      */
@@ -74,8 +81,8 @@ final class AnalyticsInfo implements JsonSerializable
     public function jsonSerialize(): array
     {
         return array_filter([
-            'googlePlayAnalytics' => $this->googlePlayAnalytics?->jsonSerialize(),
-            'itunesConnectAnalytics' => $this->iTunesConnectAnalytics?->jsonSerialize(),
+            'googlePlayAnalytics' => ($nullsafeVariable1 = $this->googlePlayAnalytics) ? $nullsafeVariable1->jsonSerialize() : null,
+            'itunesConnectAnalytics' => ($nullsafeVariable2 = $this->iTunesConnectAnalytics) ? $nullsafeVariable2->jsonSerialize() : null,
         ]);
     }
 }

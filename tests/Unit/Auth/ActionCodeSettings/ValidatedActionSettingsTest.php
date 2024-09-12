@@ -7,8 +7,6 @@ namespace Kreait\Firebase\Tests\Unit\Auth\ActionCodeSettings;
 use InvalidArgumentException;
 use Iterator;
 use Kreait\Firebase\Auth\ActionCodeSettings\ValidatedActionCodeSettings;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -20,21 +18,17 @@ final class ValidatedActionSettingsTest extends TestCase
      * @param array<string, mixed> $input
      * @param array<string, mixed> $expected
      */
-    #[DataProvider('validInputs')]
-    #[Test]
     public function itWorksValidSettings(array $input, array $expected): void
     {
         $this->assertEqualsCanonicalizing($expected, ValidatedActionCodeSettings::fromArray($input)->toArray());
     }
 
-    #[Test]
     public function itRejectsInvalidSettings(): void
     {
         $this->expectException(InvalidArgumentException::class);
         ValidatedActionCodeSettings::fromArray(['foo' => 'bar']);
     }
 
-    #[Test]
     public function itCanBeEmpty(): void
     {
         $this->assertEmpty(ValidatedActionCodeSettings::empty()->toArray());

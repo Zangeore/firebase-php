@@ -15,7 +15,6 @@ use Kreait\Firebase\Auth\SignIn\FailedToSignIn;
 use Kreait\Firebase\Auth\SignIn\GuzzleHandler;
 use Kreait\Firebase\Auth\SignInAnonymously;
 use Kreait\Firebase\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 use const JSON_FORCE_OBJECT;
 
@@ -36,30 +35,24 @@ final class GuzzleHandlerTest extends UnitTestCase
         $this->handler = new GuzzleHandler('my-project', new Client(['handler' => $this->httpResponses]));
     }
 
-    #[Test]
     public function itFailsOnAnUnsupportedAction(): void
     {
         $this->expectException(FailedToSignIn::class);
         $this->handler->handle($this->createMock(SignIn::class));
     }
 
-    #[Test]
     public function itFailsWhenGuzzleFails(): void
     {
         $client = $this->createMock(ClientInterface::class);
         $client->method('send')->willThrowException($this->createMock(ConnectException::class));
-
         $handler = new GuzzleHandler('my-project', $client);
-
         $this->expectException(FailedToSignIn::class);
         $handler->handle($this->action);
     }
 
-    #[Test]
     public function itFailsOnAnUnsuccessfulResponse(): void
     {
         $this->httpResponses->append($response = new Response(400, [], '""'));
-
         try {
             $this->handler->handle($this->action);
         } catch (FailedToSignIn $e) {
@@ -68,16 +61,13 @@ final class GuzzleHandlerTest extends UnitTestCase
         }
     }
 
-    #[Test]
     public function itFailsOnASuccessfulResponseWithInvalidJson(): void
     {
         $this->httpResponses->append(new Response(200, [], '{'));
-
         $this->expectException(FailedToSignIn::class);
         $this->handler->handle($this->action);
     }
 
-    #[Test]
     public function itWorks(): void
     {
         $this->httpResponses->append(new Response(200, [], Json::encode([
@@ -86,7 +76,6 @@ final class GuzzleHandlerTest extends UnitTestCase
             'access_token' => 'access_token',
             'expires_in' => 3600,
         ], JSON_FORCE_OBJECT)));
-
         $this->handler->handle($this->action);
         $this->addToAssertionCount(1);
     }

@@ -19,14 +19,29 @@ use function array_key_exists;
  */
 final class MfaInfo
 {
-    private function __construct(
-        public readonly string $mfaEnrollmentId,
-        public readonly ?string $displayName,
-        public readonly ?string $phoneInfo,
-        public readonly ?DateTimeImmutable $enrolledAt,
-    ) {
+    /**
+     * @readonly
+     */
+    public string $mfaEnrollmentId;
+    /**
+     * @readonly
+     */
+    public ?string $displayName;
+    /**
+     * @readonly
+     */
+    public ?string $phoneInfo;
+    /**
+     * @readonly
+     */
+    public ?DateTimeImmutable $enrolledAt;
+    private function __construct(string $mfaEnrollmentId, ?string $displayName, ?string $phoneInfo, ?DateTimeImmutable $enrolledAt)
+    {
+        $this->mfaEnrollmentId = $mfaEnrollmentId;
+        $this->displayName = $displayName;
+        $this->phoneInfo = $phoneInfo;
+        $this->enrolledAt = $enrolledAt;
     }
-
     /**
      * @internal
      *

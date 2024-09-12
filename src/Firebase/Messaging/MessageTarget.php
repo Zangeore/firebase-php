@@ -10,6 +10,16 @@ use function mb_strtolower;
 
 final class MessageTarget
 {
+    /**
+     * @var non-empty-string
+     * @readonly
+     */
+    private string $type;
+    /**
+     * @var non-empty-string
+     * @readonly
+     */
+    private string $value;
     public const CONDITION = 'condition';
     public const TOKEN = 'token';
     public const TOPIC = 'topic';
@@ -26,10 +36,10 @@ final class MessageTarget
      * @param non-empty-string $type
      * @param non-empty-string $value
      */
-    private function __construct(
-        private readonly string $type,
-        private readonly string $value,
-    ) {
+    private function __construct(string $type, string $value)
+    {
+        $this->type = $type;
+        $this->value = $value;
     }
 
     /**
@@ -44,12 +54,20 @@ final class MessageTarget
     {
         $targetType = mb_strtolower($type);
 
-        $targetValue = match ($targetType) {
-            self::CONDITION => Condition::fromValue($value)->value(),
-            self::TOKEN => RegistrationToken::fromValue($value)->value(),
-            self::TOPIC => Topic::fromValue($value)->value(),
-            self::UNKNOWN => $value,
-        };
+        switch ($targetType) {
+            case self::CONDITION:
+                $targetValue = Condition::fromValue($value)->value();
+                break;
+            case self::TOKEN:
+                $targetValue = RegistrationToken::fromValue($value)->value();
+                break;
+            case self::TOPIC:
+                $targetValue = Topic::fromValue($value)->value();
+                break;
+            case self::UNKNOWN:
+                $targetValue = $value;
+                break;
+        }
 
         return new self($targetType, $targetValue);
     }

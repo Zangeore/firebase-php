@@ -6,7 +6,6 @@ namespace Kreait\Firebase\Tests\Unit\Auth;
 
 use Beste\Json;
 use Kreait\Firebase\Auth\UserQuery;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,7 +13,6 @@ use PHPUnit\Framework\TestCase;
  */
 final class UserQueryTest extends TestCase
 {
-    #[Test]
     public function itCanBeComposed(): void
     {
         $expected = [
@@ -24,44 +22,35 @@ final class UserQueryTest extends TestCase
             'offset' => 1,
             'limit' => 499,
         ];
-
         $query = UserQuery::all()
             ->sortedBy(UserQuery::FIELD_USER_EMAIL)
             ->inDescendingOrder()
             ->withOffset(1)
             ->withLimit(499)
         ;
-
         $this->assertJsonStringEqualsJsonString(Json::encode($expected), Json::encode($query));
     }
 
-    #[Test]
     public function itCanSortInAscendingOrder(): void
     {
         $expected = [
             'returnUserInfo' => true,
             'order' => 'ASC',
         ];
-
         $query = UserQuery::all()->inAscendingOrder();
-
         $this->assertJsonStringEqualsJsonString(Json::encode($expected), Json::encode($query));
     }
 
-    #[Test]
     public function itCanSortInDescendingOrder(): void
     {
         $expected = [
             'returnUserInfo' => true,
             'order' => 'DESC',
         ];
-
         $query = UserQuery::all()->inDescendingOrder();
-
         $this->assertJsonStringEqualsJsonString(Json::encode($expected), Json::encode($query));
     }
 
-    #[Test]
     public function itCanBeCreatedFromAnArray(): void
     {
         $data = [
@@ -71,9 +60,7 @@ final class UserQueryTest extends TestCase
             'offset' => 1,
             'limit' => 499,
         ];
-
         $query = UserQuery::fromArray($data);
-
         $this->assertJsonStringEqualsJsonString(Json::encode($data), Json::encode($query));
     }
 }

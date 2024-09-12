@@ -33,14 +33,20 @@ use Stringable;
  */
 final class CreateDynamicLink implements JsonSerializable
 {
+    /**
+     * @var CreateDynamicLinkShape
+     * @readonly
+     */
+    private array $data;
     public const WITH_UNGUESSABLE_SUFFIX = 'UNGUESSABLE';
     public const WITH_SHORT_SUFFIX = 'SHORT';
 
     /**
      * @param CreateDynamicLinkShape $data
      */
-    private function __construct(private readonly array $data)
+    private function __construct(array $data)
     {
+        $this->data = $data;
     }
 
     /**
@@ -64,8 +70,9 @@ final class CreateDynamicLink implements JsonSerializable
      * or payload, which initiates app-specific logic (such as crediting the user with a coupon or
      * displaying a welcome screen). This link must be a well-formatted URL, be properly
      * URL-encoded, use either HTTP or HTTPS, and cannot be another Dynamic Link.
+     * @param Stringable|string $url
      */
-    public static function forUrl(Stringable|string $url): self
+    public static function forUrl($url): self
     {
         return new self([
             'dynamicLinkInfo' => [
@@ -75,7 +82,10 @@ final class CreateDynamicLink implements JsonSerializable
         ]);
     }
 
-    public function withDynamicLinkDomain(Stringable|string $dynamicLinkDomain): self
+    /**
+     * @param Stringable|string $dynamicLinkDomain
+     */
+    public function withDynamicLinkDomain($dynamicLinkDomain): self
     {
         $data = $this->data;
         $data['dynamicLinkInfo']['domainUriPrefix'] = Url::fromString($dynamicLinkDomain)->value;
@@ -91,7 +101,7 @@ final class CreateDynamicLink implements JsonSerializable
     /**
      * @param AnalyticsInfo|AnalyticsInfoShape $data
      */
-    public function withAnalyticsInfo(AnalyticsInfo|array $data): self
+    public function withAnalyticsInfo(array $data): self
     {
         $info = $data instanceof AnalyticsInfo ? $data : AnalyticsInfo::fromArray($data);
 
@@ -104,7 +114,7 @@ final class CreateDynamicLink implements JsonSerializable
     /**
      * @param AndroidInfo|AndroidInfoShape $data
      */
-    public function withAndroidInfo(AndroidInfo|array $data): self
+    public function withAndroidInfo(array $data): self
     {
         $info = $data instanceof AndroidInfo ? $data : AndroidInfo::fromArray($data);
 
@@ -117,7 +127,7 @@ final class CreateDynamicLink implements JsonSerializable
     /**
      * @param IOSInfo|IOSInfoShape $data
      */
-    public function withIOSInfo(IOSInfo|array $data): self
+    public function withIOSInfo(array $data): self
     {
         $info = $data instanceof IOSInfo ? $data : IOSInfo::fromArray($data);
 
@@ -130,7 +140,7 @@ final class CreateDynamicLink implements JsonSerializable
     /**
      * @param NavigationInfo|NavigationInfoShape $data
      */
-    public function withNavigationInfo(NavigationInfo|array $data): self
+    public function withNavigationInfo(array $data): self
     {
         $info = $data instanceof NavigationInfo ? $data : NavigationInfo::fromArray($data);
 
@@ -143,7 +153,7 @@ final class CreateDynamicLink implements JsonSerializable
     /**
      * @param SocialMetaTagInfo|SocialMetaTagInfoShape $data
      */
-    public function withSocialMetaTagInfo(SocialMetaTagInfo|array $data): self
+    public function withSocialMetaTagInfo(array $data): self
     {
         $info = $data instanceof SocialMetaTagInfo ? $data : SocialMetaTagInfo::fromArray($data);
 

@@ -18,8 +18,9 @@ final class TopicSubscriptions implements Countable, IteratorAggregate
 {
     /**
      * @var list<TopicSubscription>
+     * @readonly
      */
-    private readonly array $subscriptions;
+    private array $subscriptions;
 
     public function __construct(TopicSubscription ...$subscriptions)
     {
@@ -28,7 +29,7 @@ final class TopicSubscriptions implements Countable, IteratorAggregate
 
     public function filter(callable $filter): self
     {
-        return new self(...array_values(array_filter($this->subscriptions, $filter)));
+        return new self(...array_values(array_filter($this->subscriptions, ((((($filter ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value), ((((($filter ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) === null ? ARRAY_FILTER_USE_BOTH : ((((($filter ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) === null ? ARRAY_FILTER_USE_BOTH : (((($filter ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) === null ? ARRAY_FILTER_USE_BOTH : ((($filter ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) === null ? ARRAY_FILTER_USE_BOTH : (($filter ?? fn($value, $key): bool => !empty($value)) === null ? ARRAY_FILTER_USE_BOTH : ($filter === null ? ARRAY_FILTER_USE_BOTH : 0))))))));
     }
 
     /**

@@ -15,11 +15,20 @@ namespace Kreait\Firebase\AppCheck;
 final class VerifyAppCheckTokenResponse
 {
     /**
+     * @var non-empty-string
+     * @readonly
+     */
+    public string $appId;
+    /**
+     * @readonly
+     */
+    public DecodedAppCheckToken $token;
+    /**
      * @param non-empty-string $appId
      */
-    public function __construct(
-        public readonly string $appId,
-        public readonly DecodedAppCheckToken $token,
-    ) {
+    public function __construct(string $appId, DecodedAppCheckToken $token)
+    {
+        $this->appId = $appId;
+        $this->token = $token;
     }
 }

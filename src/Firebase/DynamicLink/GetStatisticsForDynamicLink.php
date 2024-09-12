@@ -9,14 +9,22 @@ use Stringable;
 
 final class GetStatisticsForDynamicLink
 {
+    /**
+     * @readonly
+     */
+    private string $dynamicLink;
     public const DEFAULT_DURATION_IN_DAYS = 7;
     private int $durationInDays = self::DEFAULT_DURATION_IN_DAYS;
 
-    private function __construct(private readonly string $dynamicLink)
+    private function __construct(string $dynamicLink)
     {
+        $this->dynamicLink = $dynamicLink;
     }
 
-    public static function forLink(Stringable|string $link): self
+    /**
+     * @param Stringable|string $link
+     */
+    public static function forLink($link): self
     {
         return new self(Url::fromString($link)->value);
     }

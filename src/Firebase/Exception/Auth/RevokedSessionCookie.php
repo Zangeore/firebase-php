@@ -11,17 +11,16 @@ use Throwable;
 
 final class RevokedSessionCookie extends RuntimeException implements AuthException
 {
-    public function __construct(
-        private readonly Token $token,
-        string $message = '',
-        int $code = 0,
-        ?Throwable $previous = null,
-    ) {
+    /**
+     * @readonly
+     */
+    private Token $token;
+    public function __construct(Token $token, string $message = '', int $code = 0, ?Throwable $previous = null)
+    {
+        $this->token = $token;
         $message = $message ?: 'The Firebase session cookie has been revoked.';
-
         parent::__construct($message, $code, $previous);
     }
-
     public function getToken(): Token
     {
         return $this->token;

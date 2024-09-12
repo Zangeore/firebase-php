@@ -16,6 +16,16 @@ use function strtr;
  */
 final class AuthResourceUrlBuilder
 {
+    /**
+     * @var non-empty-string
+     * @readonly
+     */
+    private string $apiVersion;
+    /**
+     * @var non-empty-string
+     * @readonly
+     */
+    private string $urlFormat;
     private const URL_FORMAT = 'https://identitytoolkit.googleapis.com/{version}{api}';
     private const EMULATOR_URL_FORMAT = 'http://{host}/identitytoolkit.googleapis.com/{version}{api}';
     private const DEFAULT_API_VERSION = 'v1';
@@ -24,10 +34,10 @@ final class AuthResourceUrlBuilder
      * @param non-empty-string $apiVersion
      * @param non-empty-string $urlFormat
      */
-    private function __construct(
-        private readonly string $apiVersion,
-        private readonly string $urlFormat,
-    ) {
+    private function __construct(string $apiVersion, string $urlFormat)
+    {
+        $this->apiVersion = $apiVersion;
+        $this->urlFormat = $urlFormat;
     }
 
     /**

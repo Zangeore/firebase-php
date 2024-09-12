@@ -14,10 +14,16 @@ use JsonSerializable;
 final class NavigationInfo implements JsonSerializable
 {
     /**
+     * @var NavigationInfoShape
+     * @readonly
+     */
+    private array $data;
+    /**
      * @param NavigationInfoShape $data
      */
-    private function __construct(private readonly array $data)
+    private function __construct(array $data)
     {
+        $this->data = $data;
     }
 
     /**

@@ -8,21 +8,17 @@ use Beste\Json;
 use Iterator;
 use Kreait\Firebase\Messaging\ApnsConfig;
 use Kreait\Firebase\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 
 /**
  * @internal
  */
 final class ApnsConfigTest extends UnitTestCase
 {
-    #[Test]
     public function itIsEmptyWhenItIsEmpty(): void
     {
         $this->assertSame('[]', Json::encode(ApnsConfig::new()));
     }
 
-    #[Test]
     public function itHasADefaultSound(): void
     {
         $expected = [
@@ -32,14 +28,12 @@ final class ApnsConfigTest extends UnitTestCase
                 ],
             ],
         ];
-
         $this->assertJsonStringEqualsJsonString(
             Json::encode($expected),
             Json::encode(ApnsConfig::new()->withDefaultSound()),
         );
     }
 
-    #[Test]
     public function itHasABadge(): void
     {
         $expected = [
@@ -49,7 +43,6 @@ final class ApnsConfigTest extends UnitTestCase
                 ],
             ],
         ];
-
         $this->assertJsonStringEqualsJsonString(
             Json::encode($expected),
             Json::encode(ApnsConfig::new()->withBadge(123)),
@@ -59,26 +52,20 @@ final class ApnsConfigTest extends UnitTestCase
     /**
      * @param array<string, mixed> $data
      */
-    #[DataProvider('validDataProvider')]
-    #[Test]
     public function itCanBeCreatedFromAnArray(array $data): void
     {
         $config = ApnsConfig::fromArray($data);
-
         $this->assertEqualsCanonicalizing($data, $config->jsonSerialize());
     }
 
-    #[Test]
     public function itCanHaveAPriority(): void
     {
         $config = ApnsConfig::new()->withImmediatePriority();
         $this->assertSame('10', $config->jsonSerialize()['headers']['apns-priority']);
-
         $config = ApnsConfig::new()->withPowerConservingPriority();
         $this->assertSame('5', $config->jsonSerialize()['headers']['apns-priority']);
     }
 
-    #[Test]
     public function itHasASubtitle(): void
     {
         $expected = [
@@ -88,7 +75,6 @@ final class ApnsConfigTest extends UnitTestCase
                 ],
             ],
         ];
-
         $this->assertJsonStringEqualsJsonString(
             Json::encode($expected),
             Json::encode(ApnsConfig::new()->withSubtitle('i am a subtitle')),

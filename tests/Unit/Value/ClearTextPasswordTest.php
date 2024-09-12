@@ -7,8 +7,6 @@ namespace Kreait\Firebase\Tests\Unit\Value;
 use Iterator;
 use Kreait\Firebase\Exception\InvalidArgumentException;
 use Kreait\Firebase\Value\ClearTextPassword;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -16,18 +14,19 @@ use PHPUnit\Framework\TestCase;
  */
 final class ClearTextPasswordTest extends TestCase
 {
-    #[DataProvider('validValues')]
-    #[Test]
-    public function withValidValue(mixed $value): void
+    /**
+     * @param mixed $value
+     */
+    public function withValidValue($value): void
     {
         $password = ClearTextPassword::fromString($value)->value;
-
         $this->assertSame($value, $password);
     }
 
-    #[DataProvider('invalidValues')]
-    #[Test]
-    public function withInvalidValue(mixed $value): void
+    /**
+     * @param mixed $value
+     */
+    public function withInvalidValue($value): void
     {
         $this->expectException(InvalidArgumentException::class);
         ClearTextPassword::fromString($value);

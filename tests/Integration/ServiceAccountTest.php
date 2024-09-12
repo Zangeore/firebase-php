@@ -7,8 +7,6 @@ namespace Kreait\Firebase\Tests\Integration;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Tests\IntegrationTestCase;
 use Kreait\Firebase\Util;
-use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
-use PHPUnit\Framework\Attributes\Test;
 
 use function assert;
 
@@ -40,54 +38,37 @@ final class ServiceAccountTest extends IntegrationTestCase
         Util::putenv('GOOGLE_APPLICATION_CREDENTIALS', self::$originalCredentials);
     }
 
-    #[Test]
-    #[DoesNotPerformAssertions]
     public function withPathToServiceAccount(): void
     {
         $factory = (new Factory())->withServiceAccount(self::$credentialsPath);
-
         $this->assertFunctioningConnection($factory);
     }
 
-    #[Test]
-    #[DoesNotPerformAssertions]
     public function withJsonString(): void
     {
         $json = file_get_contents(self::$credentialsPath);
         assert($json !== false && $json !== '');
-
         $factory = (new Factory())->withServiceAccount($json);
-
         $this->assertFunctioningConnection($factory);
     }
 
-    #[Test]
-    #[DoesNotPerformAssertions]
     public function withArray(): void
     {
         $factory = (new Factory())->withServiceAccount(self::$serviceAccount);
-
         $this->assertFunctioningConnection($factory);
     }
 
-    #[Test]
-    #[DoesNotPerformAssertions]
     public function withGoogleApplicationCredentialsAsFilePath(): void
     {
         Util::putenv('GOOGLE_APPLICATION_CREDENTIALS', self::$credentialsPath);
-
         $this->assertFunctioningConnection(new Factory());
     }
 
-    #[Test]
-    #[DoesNotPerformAssertions]
     public function withGoogleApplicationCredentialsAsJsonString(): void
     {
         $json = file_get_contents(self::$credentialsPath);
         assert($json !== false && $json !== '');
-
         Util::putenv('GOOGLE_APPLICATION_CREDENTIALS', $json);
-
         $this->assertFunctioningConnection(new Factory());
     }
 

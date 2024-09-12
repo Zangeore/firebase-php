@@ -9,8 +9,6 @@ use Iterator;
 use Kreait\Firebase\Database\UrlBuilder;
 use Kreait\Firebase\Tests\UnitTestCase;
 use Kreait\Firebase\Util;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 
 /**
  * @internal
@@ -25,8 +23,6 @@ final class UrlBuilderTest extends UnitTestCase
     /**
      * @param non-empty-string $url
      */
-    #[DataProvider('invalidUrls')]
-    #[Test]
     public function withInvalidUrl(string $url): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -44,12 +40,9 @@ final class UrlBuilderTest extends UnitTestCase
      * @param array<string, string> $queryParams
      * @param non-empty-string $expected
      */
-    #[DataProvider('realUrls')]
-    #[Test]
     public function getGetUrl(string $baseUrl, string $path, array $queryParams, string $expected): void
     {
         $url = UrlBuilder::create($baseUrl)->getUrl($path, $queryParams);
-
         $this->assertSame($expected, $url);
     }
 
@@ -59,13 +52,10 @@ final class UrlBuilderTest extends UnitTestCase
      * @param array<string, string> $queryParams
      * @param non-empty-string $expected
      */
-    #[DataProvider('emulatedUrls')]
-    #[Test]
     public function emulated(string $emulatorHost, string $baseUrl, string $path, array $queryParams, string $expected): void
     {
         Util::putenv('FIREBASE_DATABASE_EMULATOR_HOST', $emulatorHost);
         $url = UrlBuilder::create($baseUrl)->getUrl($path, $queryParams);
-
         $this->assertSame($expected, $url);
     }
 

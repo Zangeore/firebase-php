@@ -21,7 +21,7 @@ final class ErrorResponseParser
 
         try {
             $data = Json::decode($responseBody, true);
-        } catch (UnexpectedValueException) {
+        } catch (UnexpectedValueException $exception) {
             return $responseBody;
         }
 
@@ -43,7 +43,7 @@ final class ErrorResponseParser
     {
         try {
             return Json::decode((string) $response->getBody(), true);
-        } catch (UnexpectedValueException) {
+        } catch (UnexpectedValueException $exception) {
             return [];
         }
     }

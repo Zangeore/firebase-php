@@ -17,8 +17,9 @@ final class Messages implements Countable, IteratorAggregate
 {
     /**
      * @var Message[]
+     * @readonly
      */
-    private readonly array $messages;
+    private array $messages;
 
     public function __construct(Message ...$messages)
     {

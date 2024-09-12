@@ -20,10 +20,16 @@ use JsonSerializable;
 final class ITunesConnectAnalytics implements JsonSerializable
 {
     /**
+     * @var ITunesConnectAnalyticsShape
+     * @readonly
+     */
+    private array $data;
+    /**
      * @param ITunesConnectAnalyticsShape $data
      */
-    private function __construct(private readonly array $data)
+    private function __construct(array $data)
     {
+        $this->data = $data;
     }
 
     /**

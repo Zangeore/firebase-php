@@ -15,12 +15,23 @@ use function is_string;
 class ConditionalValue implements JsonSerializable
 {
     /**
+     * @var non-empty-string
+     * @readonly
+     */
+    private string $conditionName;
+    /**
+     * @readonly
+     */
+    private ParameterValue $value;
+    /**
      * @internal
      *
      * @param non-empty-string $conditionName
      */
-    public function __construct(private readonly string $conditionName, private readonly ParameterValue $value)
+    public function __construct(string $conditionName, ParameterValue $value)
     {
+        $this->conditionName = $conditionName;
+        $this->value = $value;
     }
 
     /**

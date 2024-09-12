@@ -12,6 +12,7 @@ return RectorConfig::configure()
         __DIR__.'/tests',
     ])
     ->withPhpSets()
+    ->withDowngradeSets(php74: true)
     ->withPreparedSets(
         deadCode: true,
         typeDeclarations: true,

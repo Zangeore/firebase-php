@@ -8,8 +8,6 @@ use GuzzleHttp\Psr7\Uri;
 use Iterator;
 use Kreait\Firebase\Database\Query\Sorter\OrderByChild;
 use Kreait\Firebase\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 
 use function rawurlencode;
 use function sprintf;
@@ -19,17 +17,17 @@ use function sprintf;
  */
 final class OrderByChildTest extends UnitTestCase
 {
-    #[DataProvider('valueProvider')]
-    #[Test]
-    public function orderByChild(string $childKey, mixed $expected, mixed $given): void
+    /**
+     * @param mixed $expected
+     * @param mixed $given
+     */
+    public function orderByChild(string $childKey, $expected, $given): void
     {
         $sut = new OrderByChild($childKey);
-
         $this->assertStringContainsString(
             'orderBy='.rawurlencode(sprintf('"%s"', $childKey)),
             (string) $sut->modifyUri(new Uri('http://example.com')),
         );
-
         $this->assertSame($expected, $sut->modifyValue($given));
     }
 

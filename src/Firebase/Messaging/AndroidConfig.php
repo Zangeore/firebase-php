@@ -81,6 +81,10 @@ use function sprintf;
  */
 final class AndroidConfig implements JsonSerializable
 {
+    /**
+     * @var AndroidConfigShape
+     */
+    private array $config;
     private const MESSAGE_PRIORITY_NORMAL = 'normal';
     private const MESSAGE_PRIORITY_HIGH = 'high';
     private const NOTIFICATION_PRIORITY_UNSPECIFIED = 'PRIORITY_UNSPECIFIED';
@@ -96,8 +100,9 @@ final class AndroidConfig implements JsonSerializable
     /**
      * @param AndroidConfigShape $config
      */
-    private function __construct(private array $config)
+    private function __construct(array $config)
     {
+        $this->config = $config;
     }
 
     public static function new(): self

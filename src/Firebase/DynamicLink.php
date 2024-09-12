@@ -9,7 +9,6 @@ use GuzzleHttp\Psr7\Utils;
 use JsonSerializable;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
-use Stringable;
 
 use function trim;
 
@@ -27,20 +26,24 @@ use function trim;
  *     warning?: list<DynamicLinkWarningShape>
  * }
  */
-final class DynamicLink implements JsonSerializable, Stringable
+final class DynamicLink implements JsonSerializable
 {
+    /**
+     * @var DynamicLinkShape
+     * @readonly
+     */
+    private array $data;
     /**
      * @param DynamicLinkShape $data
      */
-    private function __construct(private readonly array $data)
+    private function __construct(array $data)
     {
+        $this->data = $data;
     }
-
     public function __toString(): string
     {
         return (string) $this->uri();
     }
-
     /**
      * @internal
      */
@@ -48,19 +51,16 @@ final class DynamicLink implements JsonSerializable, Stringable
     {
         return new self(Json::decode((string) $response->getBody(), true));
     }
-
     public function uri(): UriInterface
     {
         return Utils::uriFor($this->data['shortLink']);
     }
-
     public function previewUri(): ?UriInterface
     {
         $previewLink = $this->data['previewLink'] ?? null;
 
         return $previewLink !== null ? Utils::uriFor($previewLink) : null;
     }
-
     /**
      * @return non-empty-string
      */
@@ -70,12 +70,10 @@ final class DynamicLink implements JsonSerializable, Stringable
 
         return $uri->getScheme().'://'.$uri->getHost();
     }
-
     public function suffix(): string
     {
         return trim($this->uri()->getPath(), '/');
     }
-
     /**
      * @return list<DynamicLinkWarningShape>
      */
@@ -83,12 +81,10 @@ final class DynamicLink implements JsonSerializable, Stringable
     {
         return $this->data['warning'] ?? [];
     }
-
     public function hasWarnings(): bool
     {
         return !empty($this->warnings());
     }
-
     public function jsonSerialize(): array
     {
         return $this->data;

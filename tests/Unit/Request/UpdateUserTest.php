@@ -8,8 +8,6 @@ use Beste\Json;
 use Iterator;
 use Kreait\Firebase\Exception\InvalidArgumentException;
 use Kreait\Firebase\Request\UpdateUser;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -21,16 +19,12 @@ final class UpdateUserTest extends TestCase
      * @param array<array<string|mixed>> $properties
      * @param array<array<string|mixed>> $expected
      */
-    #[DataProvider('propertiesProvider')]
-    #[Test]
     public function withProperties(array $properties, array $expected): void
     {
         $request = UpdateUser::withProperties($properties);
-
         $this->assertEqualsCanonicalizing($expected, $request->jsonSerialize());
     }
 
-    #[Test]
     public function withMissingUid(): void
     {
         $this->expectException(InvalidArgumentException::class);

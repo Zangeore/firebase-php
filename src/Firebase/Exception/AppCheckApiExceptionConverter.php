@@ -18,7 +18,10 @@ use Throwable;
  */
 final class AppCheckApiExceptionConverter
 {
-    private readonly ErrorResponseParser $responseParser;
+    /**
+     * @readonly
+     */
+    private ErrorResponseParser $responseParser;
 
     public function __construct()
     {
@@ -49,9 +52,12 @@ final class AppCheckApiExceptionConverter
             $code = $response->getStatusCode();
         }
 
-        return match ($code) {
-            StatusCode::STATUS_UNAUTHORIZED, StatusCode::STATUS_FORBIDDEN => new PermissionDenied($message, $code, $e),
-            default => new AppCheckError($message, $code, $e),
-        };
+        switch ($code) {
+            case StatusCode::STATUS_UNAUTHORIZED:
+            case StatusCode::STATUS_FORBIDDEN:
+                return new PermissionDenied($message, $code, $e);
+            default:
+                return new AppCheckError($message, $code, $e);
+        }
     }
 }

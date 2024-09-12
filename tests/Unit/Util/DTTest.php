@@ -9,8 +9,6 @@ use DateTimeZone;
 use InvalidArgumentException;
 use Iterator;
 use Kreait\Firebase\Util\DT;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -22,31 +20,31 @@ use function time;
  */
 final class DTTest extends TestCase
 {
-    #[DataProvider('validFixedValues')]
-    #[Test]
-    public function convertWithFixedValues(string $expected, mixed $value): void
+    /**
+     * @param mixed $value
+     */
+    public function convertWithFixedValues(string $expected, $value): void
     {
         $dt = DT::toUTCDateTimeImmutable($value);
-
         $this->assertSame($expected, $dt->format('U.u'));
         $this->assertSame('UTC', $dt->getTimezone()->getName());
     }
 
-    #[DataProvider('validVariableValues')]
-    #[Test]
-    public function convertWithVariableValues(mixed $value): void
+    /**
+     * @param mixed $value
+     */
+    public function convertWithVariableValues($value): void
     {
         $dt = DT::toUTCDateTimeImmutable($value);
-
         $this->assertSame('UTC', $dt->getTimezone()->getName());
     }
 
-    #[DataProvider('invalidValues')]
-    #[Test]
-    public function convertInvalid(mixed $value): void
+    /**
+     * @param mixed $value
+     */
+    public function convertInvalid($value): void
     {
         $this->expectException(InvalidArgumentException::class);
-
         DT::toUTCDateTimeImmutable($value);
     }
 

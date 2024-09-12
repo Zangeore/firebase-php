@@ -16,14 +16,22 @@ use function array_key_exists;
 final class Storage implements Contract\Storage
 {
     /**
+     * @readonly
+     */
+    private StorageClient $storageClient;
+    /**
+     * @readonly
+     */
+    private ?string $defaultBucket = null;
+    /**
      * @var Bucket[]
      */
     private array $buckets = [];
 
-    public function __construct(
-        private readonly StorageClient $storageClient,
-        private readonly ?string $defaultBucket = null,
-    ) {
+    public function __construct(StorageClient $storageClient, ?string $defaultBucket = null)
+    {
+        $this->storageClient = $storageClient;
+        $this->defaultBucket = $defaultBucket;
     }
 
     public function getStorageClient(): StorageClient

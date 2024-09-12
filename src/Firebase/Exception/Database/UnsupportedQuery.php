@@ -11,15 +11,15 @@ use Throwable;
 
 final class UnsupportedQuery extends RuntimeException implements DatabaseException
 {
-    public function __construct(
-        private readonly Query $query,
-        string $message = '',
-        int $code = 0,
-        ?Throwable $previous = null,
-    ) {
+    /**
+     * @readonly
+     */
+    private Query $query;
+    public function __construct(Query $query, string $message = '', int $code = 0, ?Throwable $previous = null)
+    {
+        $this->query = $query;
         parent::__construct($message, $code, $previous);
     }
-
     public function getQuery(): Query
     {
         return $this->query;

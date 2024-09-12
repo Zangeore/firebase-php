@@ -14,12 +14,19 @@ use function array_merge;
  */
 trait ModifierTrait
 {
-    public function modifyValue(mixed $value): mixed
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
+    public function modifyValue($value)
     {
         return $value;
     }
 
-    protected function appendQueryParam(UriInterface $uri, string $key, mixed $value): UriInterface
+    /**
+     * @param mixed $value
+     */
+    protected function appendQueryParam(UriInterface $uri, string $key, $value): UriInterface
     {
         $queryParams = array_merge(Query::parse($uri->getQuery()), [$key => $value]);
 

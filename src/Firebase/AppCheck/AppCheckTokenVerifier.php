@@ -12,7 +12,6 @@ use LogicException;
 use Throwable;
 
 use function in_array;
-use function str_starts_with;
 
 /**
  * @internal
@@ -21,15 +20,24 @@ use function str_starts_with;
  */
 final class AppCheckTokenVerifier
 {
+    /**
+     * @var non-empty-string
+     * @readonly
+     */
+    private string $projectId;
+    /**
+     * @readonly
+     */
+    private CachedKeySet $keySet;
     private const APP_CHECK_ISSUER_PREFIX = 'https://firebaseappcheck.googleapis.com/';
 
     /**
      * @param non-empty-string $projectId
      */
-    public function __construct(
-        private readonly string $projectId,
-        private readonly CachedKeySet $keySet,
-    ) {
+    public function __construct(string $projectId, CachedKeySet $keySet)
+    {
+        $this->projectId = $projectId;
+        $this->keySet = $keySet;
     }
 
     /**
@@ -82,7 +90,7 @@ final class AppCheckTokenVerifier
             throw new FailedToVerifyAppCheckToken('The "aud" claim must include the project ID.');
         }
 
-        if (!str_starts_with($token->iss, self::APP_CHECK_ISSUER_PREFIX)) {
+        if (strncmp($token->iss, self::APP_CHECK_ISSUER_PREFIX, strlen(self::APP_CHECK_ISSUER_PREFIX)) !== 0) {
             throw new FailedToVerifyAppCheckToken('The provided App Check token has incorrect "iss" (issuer) claim.');
         }
     }

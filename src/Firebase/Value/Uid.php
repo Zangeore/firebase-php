@@ -16,8 +16,9 @@ final class Uid
 {
     /**
      * @var non-empty-string
+     * @readonly
      */
-    public readonly string $value;
+    public string $value;
 
     private function __construct(string $value)
     {
@@ -28,7 +29,10 @@ final class Uid
         $this->value = $value;
     }
 
-    public static function fromString(Stringable|string $value): self
+    /**
+     * @param Stringable|string $value
+     */
+    public static function fromString($value): self
     {
         return new self((string) $value);
     }

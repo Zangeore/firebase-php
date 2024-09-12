@@ -19,14 +19,29 @@ use function array_key_exists;
  */
 final class UserMetaData
 {
-    public function __construct(
-        public readonly DateTimeImmutable $createdAt,
-        public readonly ?DateTimeImmutable $lastLoginAt,
-        public readonly ?DateTimeImmutable $passwordUpdatedAt,
-        public readonly ?DateTimeImmutable $lastRefreshAt,
-    ) {
+    /**
+     * @readonly
+     */
+    public DateTimeImmutable $createdAt;
+    /**
+     * @readonly
+     */
+    public ?DateTimeImmutable $lastLoginAt;
+    /**
+     * @readonly
+     */
+    public ?DateTimeImmutable $passwordUpdatedAt;
+    /**
+     * @readonly
+     */
+    public ?DateTimeImmutable $lastRefreshAt;
+    public function __construct(DateTimeImmutable $createdAt, ?DateTimeImmutable $lastLoginAt, ?DateTimeImmutable $passwordUpdatedAt, ?DateTimeImmutable $lastRefreshAt)
+    {
+        $this->createdAt = $createdAt;
+        $this->lastLoginAt = $lastLoginAt;
+        $this->passwordUpdatedAt = $passwordUpdatedAt;
+        $this->lastRefreshAt = $lastRefreshAt;
     }
-
     /**
      * @internal
      *

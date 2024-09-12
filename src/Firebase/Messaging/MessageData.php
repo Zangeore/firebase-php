@@ -12,15 +12,20 @@ use function in_array;
 use function mb_detect_encoding;
 use function mb_detect_order;
 use function mb_strtolower;
-use function str_starts_with;
 
 final class MessageData implements JsonSerializable
 {
     /**
+     * @var array<non-empty-string, string>
+     * @readonly
+     */
+    private array $data;
+    /**
      * @param array<non-empty-string, string> $data
      */
-    private function __construct(private readonly array $data)
+    private function __construct(array $data)
     {
+        $this->data = $data;
     }
 
     /**
@@ -86,7 +91,7 @@ final class MessageData implements JsonSerializable
         }
 
         foreach ($reservedPrefixes as $prefix) {
-            if (str_starts_with($check, $prefix)) {
+            if (strncmp($check, $prefix, strlen($prefix)) === 0) {
                 throw new InvalidArgumentException("'{$prefix}' is a reserved prefix and can not be used as a key in FCM data payloads");
             }
         }

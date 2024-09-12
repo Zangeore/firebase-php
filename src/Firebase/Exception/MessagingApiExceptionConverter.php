@@ -29,8 +29,14 @@ use function is_numeric;
  */
 class MessagingApiExceptionConverter
 {
-    private readonly ErrorResponseParser $responseParser;
-    private readonly ClockInterface $clock;
+    /**
+     * @readonly
+     */
+    private ErrorResponseParser $responseParser;
+    /**
+     * @readonly
+     */
+    private ClockInterface $clock;
 
     public function __construct(?ClockInterface $clock = null)
     {
@@ -138,7 +144,7 @@ class MessagingApiExceptionConverter
 
         try {
             return new DateTimeImmutable($retryAfter);
-        } catch (Throwable) {
+        } catch (Throwable $exception) {
             // We can't afford to throw exceptions in an exception handler :)
             // Here, if the Retry-After header doesn't have a numeric value
             // or a date that can be handled by DateTimeImmutable, we just

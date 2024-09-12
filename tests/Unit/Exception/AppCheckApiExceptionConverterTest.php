@@ -14,8 +14,6 @@ use Kreait\Firebase\Exception\AppCheck\ApiConnectionFailed;
 use Kreait\Firebase\Exception\AppCheck\AppCheckError;
 use Kreait\Firebase\Exception\AppCheck\PermissionDenied;
 use Kreait\Firebase\Exception\AppCheckApiExceptionConverter;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use RuntimeException;
@@ -33,26 +31,21 @@ final class AppCheckApiExceptionConverterTest extends TestCase
         $this->converter = new AppCheckApiExceptionConverter();
     }
 
-    #[Test]
     public function itConvertsAConnectException(): void
     {
         $connectException = new ConnectException(
             'curl error xx',
             $this->createMock(RequestInterface::class),
         );
-
         $this->assertInstanceOf(ApiConnectionFailed::class, $this->converter->convertException($connectException));
     }
 
     /**
      * @param class-string<object> $expectedClass
      */
-    #[DataProvider('exceptions')]
-    #[Test]
     public function itConvertsExceptions(Throwable $e, string $expectedClass): void
     {
         $converted = $this->converter->convertException($e);
-
         $this->assertInstanceOf($expectedClass, $converted);
     }
 

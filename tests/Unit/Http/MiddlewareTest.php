@@ -8,7 +8,6 @@ use Closure;
 use GuzzleHttp\Psr7\Request;
 use Kreait\Firebase\Http\Middleware;
 use Kreait\Firebase\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\Test;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -25,14 +24,11 @@ final class MiddlewareTest extends UnitTestCase
         $this->handler = static fn(RequestInterface $request): RequestInterface => $request;
     }
 
-    #[Test]
     public function ensureJsonSuffix(): void
     {
         $middleware = Middleware::ensureJsonSuffix();
         $handlerClosure = $middleware($this->handler);
-
         $request = $handlerClosure($this->request);
-
         $this->assertInstanceOf(RequestInterface::class, $request);
         $this->assertStringEndsWith('.json', $request->getUri()->getPath());
     }

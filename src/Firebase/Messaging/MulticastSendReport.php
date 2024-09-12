@@ -60,7 +60,7 @@ final class MulticastSendReport implements Countable
     {
         $items = $this->items;
 
-        return self::withItems(array_values(array_filter($items, $callback)));
+        return self::withItems(array_values(array_filter($items, ((((($callback ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value), ((((($callback ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) === null ? ARRAY_FILTER_USE_BOTH : ((((($callback ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) === null ? ARRAY_FILTER_USE_BOTH : (((($callback ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) === null ? ARRAY_FILTER_USE_BOTH : ((($callback ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) === null ? ARRAY_FILTER_USE_BOTH : (($callback ?? fn($value, $key): bool => !empty($value)) === null ? ARRAY_FILTER_USE_BOTH : ($callback === null ? ARRAY_FILTER_USE_BOTH : 0))))))));
     }
 
     /**

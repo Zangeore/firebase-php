@@ -19,19 +19,28 @@ use Throwable;
  */
 class ApiClient
 {
+    /**
+     * @readonly
+     */
+    private ClientInterface $client;
+    /**
+     * @readonly
+     */
+    private UrlBuilder $resourceUrlBuilder;
     protected DatabaseApiExceptionConverter $errorHandler;
 
-    public function __construct(
-        private readonly ClientInterface $client,
-        private readonly UrlBuilder $resourceUrlBuilder,
-    ) {
+    public function __construct(ClientInterface $client, UrlBuilder $resourceUrlBuilder)
+    {
+        $this->client = $client;
+        $this->resourceUrlBuilder = $resourceUrlBuilder;
         $this->errorHandler = new DatabaseApiExceptionConverter();
     }
 
     /**
      * @throws DatabaseException
+     * @return mixed
      */
-    public function get(string $path): mixed
+    public function get(string $path)
     {
         $response = $this->requestApi('GET', $path);
 
@@ -62,8 +71,10 @@ class ApiClient
 
     /**
      * @throws DatabaseException
+     * @param mixed $value
+     * @return mixed
      */
-    public function set(string $path, mixed $value): mixed
+    public function set(string $path, $value)
     {
         $response = $this->requestApi('PUT', $path, ['json' => $value]);
 
@@ -72,8 +83,10 @@ class ApiClient
 
     /**
      * @throws DatabaseException
+     * @param mixed $value
+     * @return mixed
      */
-    public function setWithEtag(string $path, mixed $value, string $etag): mixed
+    public function setWithEtag(string $path, $value, string $etag)
     {
         $response = $this->requestApi('PUT', $path, [
             'headers' => [
@@ -99,8 +112,9 @@ class ApiClient
 
     /**
      * @throws DatabaseException
+     * @return mixed
      */
-    public function updateRules(string $path, RuleSet $ruleSet): mixed
+    public function updateRules(string $path, RuleSet $ruleSet)
     {
         $rules = $ruleSet->getRules();
         $encodedRules = Json::encode((object) $rules);
@@ -114,8 +128,9 @@ class ApiClient
 
     /**
      * @throws DatabaseException
+     * @param mixed $value
      */
-    public function push(string $path, mixed $value): string
+    public function push(string $path, $value): string
     {
         $response = $this->requestApi('POST', $path, ['json' => $value]);
 

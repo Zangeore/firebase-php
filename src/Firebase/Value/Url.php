@@ -14,15 +14,16 @@ final class Url
 {
     /**
      * @var non-empty-string
+     * @readonly
      */
-    public readonly string $value;
+    public string $value;
 
     /**
      * @param non-empty-string $value
      */
     private function __construct(string $value)
     {
-        $startsWithHttp = str_starts_with($value, 'https://') || str_starts_with($value, 'http://');
+        $startsWithHttp = strncmp($value, 'https://', strlen('https://')) === 0 || strncmp($value, 'http://', strlen('http://')) === 0;
         $parsedValue = parse_url($value);
 
         if (!$startsWithHttp || $parsedValue === false) {
@@ -32,7 +33,10 @@ final class Url
         $this->value = $value;
     }
 
-    public static function fromString(Stringable|string $value): self
+    /**
+     * @param Stringable|string $value
+     */
+    public static function fromString($value): self
     {
         $value = (string) $value;
 

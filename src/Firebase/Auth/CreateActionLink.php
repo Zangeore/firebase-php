@@ -13,16 +13,38 @@ use Stringable;
  */
 final class CreateActionLink
 {
-    private function __construct(
-        private readonly ?string $tenantId,
-        private readonly ?string $locale,
-        private readonly string $type,
-        private readonly string $email,
-        private readonly ActionCodeSettings $settings,
-    ) {
+    /**
+     * @readonly
+     */
+    private ?string $tenantId;
+    /**
+     * @readonly
+     */
+    private ?string $locale;
+    /**
+     * @readonly
+     */
+    private string $type;
+    /**
+     * @readonly
+     */
+    private string $email;
+    /**
+     * @readonly
+     */
+    private ActionCodeSettings $settings;
+    private function __construct(?string $tenantId, ?string $locale, string $type, string $email, ActionCodeSettings $settings)
+    {
+        $this->tenantId = $tenantId;
+        $this->locale = $locale;
+        $this->type = $type;
+        $this->email = $email;
+        $this->settings = $settings;
     }
-
-    public static function new(string $type, Stringable|string $email, ActionCodeSettings $settings, ?string $tenantId = null, ?string $locale = null): self
+    /**
+     * @param Stringable|string $email
+     */
+    public static function new(string $type, $email, ActionCodeSettings $settings, ?string $tenantId = null, ?string $locale = null): self
     {
         $email = Email::fromString((string) $email)->value;
 

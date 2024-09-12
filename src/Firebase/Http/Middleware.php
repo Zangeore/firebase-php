@@ -19,7 +19,6 @@ use Psr\Log\LoggerInterface;
 
 use function array_merge;
 use function ltrim;
-use function str_ends_with;
 
 /**
  * @internal
@@ -35,7 +34,7 @@ final class Middleware
             $uri = $request->getUri();
             $path = '/'.ltrim($uri->getPath(), '/');
 
-            if (!str_ends_with($path, '.json')) {
+            if (substr_compare($path, '.json', -strlen('.json')) !== 0) {
                 $uri = $uri->withPath($path.'.json');
                 $request = $request->withUri($uri);
             }

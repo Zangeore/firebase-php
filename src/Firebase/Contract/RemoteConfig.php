@@ -29,7 +29,7 @@ interface RemoteConfig
      *
      * @throws RemoteConfigException if something went wrong
      */
-    public function get(Version|VersionNumber|int|string|null $versionNumber = null): Template;
+    public function get($versionNumber = null): Template;
 
     /**
      * Validates the given template without publishing it.
@@ -58,7 +58,7 @@ interface RemoteConfig
      * @throws VersionNotFound
      * @throws RemoteConfigException if something went wrong
      */
-    public function getVersion(VersionNumber|int|string $versionNumber): Version;
+    public function getVersion($versionNumber): Version;
 
     /**
      * Returns a version with the given number.
@@ -68,7 +68,7 @@ interface RemoteConfig
      * @throws VersionNotFound
      * @throws RemoteConfigException if something went wrong
      */
-    public function rollbackToVersion(VersionNumber|int|string $versionNumber): Template;
+    public function rollbackToVersion($versionNumber): Template;
 
     /**
      * @param FindVersions|FindVersionsShape|null $query

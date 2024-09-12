@@ -12,15 +12,24 @@ use function is_callable;
 final class HttpClientOptions
 {
     /**
+     * @var array<non-empty-string, mixed>
+     * @readonly
+     */
+    private array $guzzleConfig;
+    /**
+     * @var list<array{middleware: callable, name: string}>
+     * @readonly
+     */
+    private array $guzzleMiddlewares;
+    /**
      * @param array<non-empty-string, mixed> $guzzleConfig
      * @param list<array{middleware: callable, name: string}> $guzzleMiddlewares
      */
-    private function __construct(
-        private readonly array $guzzleConfig,
-        private readonly array $guzzleMiddlewares,
-    ) {
+    private function __construct(array $guzzleConfig, array $guzzleMiddlewares)
+    {
+        $this->guzzleConfig = $guzzleConfig;
+        $this->guzzleMiddlewares = $guzzleMiddlewares;
     }
-
     public static function default(): self
     {
         return new self([], []);
@@ -120,8 +129,9 @@ final class HttpClientOptions
 
     /**
      * @param non-empty-string $name
+     * @param mixed $option
      */
-    public function withGuzzleConfigOption(string $name, mixed $option): self
+    public function withGuzzleConfigOption(string $name, $option): self
     {
         $config = $this->guzzleConfig;
         $config[$name] = $option;

@@ -18,10 +18,16 @@ use JsonSerializable;
 final class RolloutValue implements JsonSerializable
 {
     /**
+     * @var RemoteConfigRolloutValueShape
+     * @readonly
+     */
+    private array $data;
+    /**
      * @param RemoteConfigRolloutValueShape $data
      */
-    private function __construct(private readonly array $data)
+    private function __construct(array $data)
     {
+        $this->data = $data;
     }
 
     /**

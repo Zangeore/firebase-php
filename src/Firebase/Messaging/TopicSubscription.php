@@ -11,13 +11,24 @@ use const DATE_ATOM;
 
 final class TopicSubscription implements JsonSerializable
 {
-    public function __construct(
-        private readonly Topic $topic,
-        private readonly RegistrationToken $registrationToken,
-        private readonly DateTimeImmutable $subscribedAt,
-    ) {
+    /**
+     * @readonly
+     */
+    private Topic $topic;
+    /**
+     * @readonly
+     */
+    private RegistrationToken $registrationToken;
+    /**
+     * @readonly
+     */
+    private DateTimeImmutable $subscribedAt;
+    public function __construct(Topic $topic, RegistrationToken $registrationToken, DateTimeImmutable $subscribedAt)
+    {
+        $this->topic = $topic;
+        $this->registrationToken = $registrationToken;
+        $this->subscribedAt = $subscribedAt;
     }
-
     public function topic(): Topic
     {
         return $this->topic;

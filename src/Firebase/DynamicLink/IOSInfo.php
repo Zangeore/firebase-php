@@ -19,10 +19,16 @@ use JsonSerializable;
 final class IOSInfo implements JsonSerializable
 {
     /**
+     * @var IOSInfoShape
+     * @readonly
+     */
+    private array $data;
+    /**
      * @param IOSInfoShape $data
      */
-    private function __construct(private readonly array $data)
+    private function __construct(array $data)
     {
+        $this->data = $data;
     }
 
     /**

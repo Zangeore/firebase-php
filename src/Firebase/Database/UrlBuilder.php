@@ -19,6 +19,21 @@ use function trim;
  */
 final class UrlBuilder
 {
+    /**
+     * @var http|https
+     * @readonly
+     */
+    private string $scheme;
+    /**
+     * @var non-empty-string
+     * @readonly
+     */
+    private string $host;
+    /**
+     * @var array<string, string>
+     * @readonly
+     */
+    private array $defaultQueryParams;
     private const EXPECTED_URL_FORMAT = '@^https://(?P<namespace>[^.]+)\.(?P<host>.+)$@';
 
     /**
@@ -26,11 +41,11 @@ final class UrlBuilder
      * @param non-empty-string $host
      * @param array<string, string> $defaultQueryParams
      */
-    private function __construct(
-        private readonly string $scheme,
-        private readonly string $host,
-        private readonly array $defaultQueryParams,
-    ) {
+    private function __construct(string $scheme, string $host, array $defaultQueryParams)
+    {
+        $this->scheme = $scheme;
+        $this->host = $host;
+        $this->defaultQueryParams = $defaultQueryParams;
     }
 
     /**

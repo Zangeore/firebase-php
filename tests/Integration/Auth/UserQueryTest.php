@@ -8,7 +8,6 @@ use Kreait\Firebase\Auth\UserQuery;
 use Kreait\Firebase\Auth\UserRecord;
 use Kreait\Firebase\Contract\Auth;
 use Kreait\Firebase\Tests\IntegrationTestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 use function current;
 use function random_int;
@@ -27,18 +26,15 @@ final class UserQueryTest extends IntegrationTestCase
         $this->auth = self::$factory->createAuth();
     }
 
-    #[Test]
     public function sortByField(): void
     {
         $user = $this->createUserWithEmailAndPassword();
-
         // Another test could have created a user in-between, so we fetch more than we actually need
         $result = $this->auth->queryUsers([
             'sortBy' => UserQuery::FIELD_CREATED_AT,
             'order' => UserQuery::ORDER_DESC,
             'limit' => 10,
         ]);
-
         try {
             $this->assertUserExists($user, $result);
         } finally {
@@ -46,23 +42,19 @@ final class UserQueryTest extends IntegrationTestCase
         }
     }
 
-    #[Test]
     public function ascendingSortOrder(): void
     {
         // Create two users just in case there are no others in the database
         $earlier = $this->createUserWithEmailAndPassword();
         $later = $this->createUserWithEmailAndPassword();
-
         $query = [
             'sortBy' => UserQuery::FIELD_CREATED_AT,
             'order' => UserQuery::ORDER_ASC,
             'limit' => 2,
         ];
-
         $result = $this->auth->queryUsers($query);
         $firstResult = array_shift($result);
         $secondResult = array_shift($result);
-
         try {
             $this->assertInstanceOf(UserRecord::class, $firstResult);
             $this->assertInstanceOf(UserRecord::class, $secondResult);
@@ -73,23 +65,19 @@ final class UserQueryTest extends IntegrationTestCase
         }
     }
 
-    #[Test]
     public function descendingSortOrder(): void
     {
         // Create two users just in case there are no others in the database
         $earlier = $this->createUserWithEmailAndPassword();
         $later = $this->createUserWithEmailAndPassword();
-
         $query = [
             'sortBy' => UserQuery::FIELD_CREATED_AT,
             'order' => UserQuery::ORDER_DESC,
             'limit' => 2,
         ];
-
         $result = $this->auth->queryUsers($query);
         $firstResult = array_shift($result);
         $secondResult = array_shift($result);
-
         try {
             $this->assertInstanceOf(UserRecord::class, $firstResult);
             $this->assertInstanceOf(UserRecord::class, $secondResult);
@@ -100,19 +88,15 @@ final class UserQueryTest extends IntegrationTestCase
         }
     }
 
-    #[Test]
     public function limit(): void
     {
         // Create two users just in case there are no others in the database
         $firstUser = $this->createUserWithEmailAndPassword();
         $secondUser = $this->createUserWithEmailAndPassword();
-
         $query = [
             'limit' => 1,
         ];
-
         $result = $this->auth->queryUsers($query);
-
         try {
             $this->assertCount(1, $result);
         } finally {
@@ -121,21 +105,17 @@ final class UserQueryTest extends IntegrationTestCase
         }
     }
 
-    #[Test]
     public function filterByUid(): void
     {
         $user = $this->createUserWithEmailAndPassword();
-
         $query = [
             'filter' => [
                 'userId' => $user->uid,
             ],
             'limit' => 1,
         ];
-
         $result = $this->auth->queryUsers($query);
         $found = current($result);
-
         try {
             $this->assertCount(1, $result);
             $this->assertInstanceOf(UserRecord::class, $found);
@@ -145,21 +125,17 @@ final class UserQueryTest extends IntegrationTestCase
         }
     }
 
-    #[Test]
     public function filterByEmail(): void
     {
         $user = $this->createUserWithEmailAndPassword();
-
         $query = [
             'filter' => [
                 'email' => $user->email,
             ],
             'limit' => 1,
         ];
-
         $result = $this->auth->queryUsers($query);
         $found = current($result);
-
         try {
             $this->assertCount(1, $result);
             $this->assertInstanceOf(UserRecord::class, $found);
@@ -169,23 +145,19 @@ final class UserQueryTest extends IntegrationTestCase
         }
     }
 
-    #[Test]
     public function filterByPhoneNumber(): void
     {
         $user = $this->auth->createUser([
             'phoneNumber' => '+49'.random_int(90_000_000_000, 99_999_999_999),
         ]);
-
         $query = [
             'filter' => [
                 'phoneNumber' => $user->phoneNumber,
             ],
             'limit' => 1,
         ];
-
         $result = $this->auth->queryUsers($query);
         $found = current($result);
-
         try {
             $this->assertCount(1, $result);
             $this->assertInstanceOf(UserRecord::class, $found);

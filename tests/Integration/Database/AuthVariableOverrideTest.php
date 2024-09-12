@@ -9,8 +9,6 @@ use Kreait\Firebase\Contract\Database;
 use Kreait\Firebase\Database\RuleSet;
 use Kreait\Firebase\Exception\Database\PermissionDenied;
 use Kreait\Firebase\Tests\Integration\DatabaseTestCase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\Test;
 
 use function assert;
 use function is_string;
@@ -18,31 +16,24 @@ use function is_string;
 /**
  * @internal
  */
-#[Group('emulator')]
 final class AuthVariableOverrideTest extends DatabaseTestCase
 {
     private Auth $auth;
-
     protected function setUp(): void
     {
         $this->auth = self::$factory->createAuth();
     }
-
     protected function tearDown(): void
     {
         self::$db->updateRules(RuleSet::private());
 
         parent::tearDown();
     }
-
-    #[Test]
     public function itCanAccessAReferenceThatBelongsToTheSameUser(): void
     {
         $uid = $this->auth->signInAnonymously()->firebaseUserId();
         assert(is_string($uid));
-
         $this->publishRules(__FUNCTION__, ['.read' => 'auth.uid === "'.$uid.'"']);
-
         try {
             $db = $this->databaseWithAuthOverride(['uid' => $uid]);
 
@@ -52,15 +43,11 @@ final class AuthVariableOverrideTest extends DatabaseTestCase
             $this->auth->deleteUser($uid);
         }
     }
-
-    #[Test]
     public function itCanNotAccessAReferenceThatRequiresAnotherUser(): void
     {
         $uid = $this->auth->signInAnonymously()->firebaseUserId();
         assert(is_string($uid));
-
         $this->publishRules(__FUNCTION__, ['.read' => 'auth.uid === "someone-else"']);
-
         try {
             $db = $this->databaseWithAuthOverride(['uid' => $uid]);
 
@@ -70,15 +57,11 @@ final class AuthVariableOverrideTest extends DatabaseTestCase
             $this->auth->deleteUser($uid);
         }
     }
-
-    #[Test]
     public function itCanAccessAPublicReferenceWhenAuthOverrideIsSetToBeUnauthenticated(): void
     {
         $uid = $this->auth->signInAnonymously()->firebaseUserId();
         assert(is_string($uid));
-
         $this->publishRules(__FUNCTION__, ['.read' => true]);
-
         try {
             $this->databaseWithAuthOverride(null)
                 ->getReference(self::$refPrefix)
@@ -91,15 +74,11 @@ final class AuthVariableOverrideTest extends DatabaseTestCase
             $this->auth->deleteUser($uid);
         }
     }
-
-    #[Test]
     public function whenUnauthenticatedItCanNotAccessAReferenceThatRequiresAuthentication(): void
     {
         $uid = $this->auth->signInAnonymously()->firebaseUserId();
         assert(is_string($uid));
-
         $this->publishRules(__FUNCTION__, ['.read' => 'auth != null']);
-
         try {
             $db = $this->databaseWithAuthOverride(null);
 
@@ -109,7 +88,6 @@ final class AuthVariableOverrideTest extends DatabaseTestCase
             $this->auth->deleteUser($uid);
         }
     }
-
     /**
      * @param array<string, mixed> $permissions
      */
@@ -122,7 +100,6 @@ final class AuthVariableOverrideTest extends DatabaseTestCase
 
         self::$db->updateRules(RuleSet::fromArray($rules));
     }
-
     /**
      * @param array<non-empty-string, mixed>|null $override
      */

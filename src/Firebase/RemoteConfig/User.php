@@ -17,16 +17,29 @@ use Psr\Http\Message\UriInterface;
 final class User
 {
     /**
+     * @var non-empty-string|null
+     * @readonly
+     */
+    private ?string $name;
+    /**
+     * @var non-empty-string|null
+     * @readonly
+     */
+    private ?string $email;
+    /**
+     * @readonly
+     */
+    private ?UriInterface $imageUri;
+    /**
      * @param non-empty-string|null $name
      * @param non-empty-string|null $email
      */
-    private function __construct(
-        private readonly ?string $name,
-        private readonly ?string $email,
-        private readonly ?UriInterface $imageUri,
-    ) {
+    private function __construct(?string $name, ?string $email, ?UriInterface $imageUri)
+    {
+        $this->name = $name;
+        $this->email = $email;
+        $this->imageUri = $imageUri;
     }
-
     /**
      * @internal
      *

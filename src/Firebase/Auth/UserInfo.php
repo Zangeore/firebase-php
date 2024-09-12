@@ -30,6 +30,36 @@ namespace Kreait\Firebase\Auth;
 final class UserInfo
 {
     /**
+     * @var non-empty-string
+     * @readonly
+     */
+    public string $uid;
+    /**
+     * @var non-empty-string
+     * @readonly
+     */
+    public string $providerId;
+    /**
+     * @var non-empty-string|null
+     * @readonly
+     */
+    public ?string $displayName;
+    /**
+     * @var non-empty-string|null
+     * @readonly
+     */
+    public ?string $email;
+    /**
+     * @var non-empty-string|null
+     * @readonly
+     */
+    public ?string $phoneNumber;
+    /**
+     * @var non-empty-string|null
+     * @readonly
+     */
+    public ?string $photoUrl;
+    /**
      * @param non-empty-string $uid
      * @param non-empty-string $providerId
      * @param non-empty-string|null $displayName
@@ -37,16 +67,15 @@ final class UserInfo
      * @param non-empty-string|null $phoneNumber
      * @param non-empty-string|null $photoUrl
      */
-    public function __construct(
-        public readonly string $uid,
-        public readonly string $providerId,
-        public readonly ?string $displayName,
-        public readonly ?string $email,
-        public readonly ?string $phoneNumber,
-        public readonly ?string $photoUrl,
-    ) {
+    public function __construct(string $uid, string $providerId, ?string $displayName, ?string $email, ?string $phoneNumber, ?string $photoUrl)
+    {
+        $this->uid = $uid;
+        $this->providerId = $providerId;
+        $this->displayName = $displayName;
+        $this->email = $email;
+        $this->phoneNumber = $phoneNumber;
+        $this->photoUrl = $photoUrl;
     }
-
     /**
      * @internal
      *

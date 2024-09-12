@@ -19,13 +19,24 @@ use const JSON_FORCE_OBJECT;
  */
 final class ApiClient
 {
-    public function __construct(
-        private readonly ClientInterface $client,
-        private readonly RequestFactoryInterface $requestFactory,
-        private readonly StreamFactoryInterface $streamFactory,
-    ) {
+    /**
+     * @readonly
+     */
+    private ClientInterface $client;
+    /**
+     * @readonly
+     */
+    private RequestFactoryInterface $requestFactory;
+    /**
+     * @readonly
+     */
+    private StreamFactoryInterface $streamFactory;
+    public function __construct(ClientInterface $client, RequestFactoryInterface $requestFactory, StreamFactoryInterface $streamFactory)
+    {
+        $this->client = $client;
+        $this->requestFactory = $requestFactory;
+        $this->streamFactory = $streamFactory;
     }
-
     public function createDynamicLinkRequest(CreateDynamicLink $action): RequestInterface
     {
         return $this->requestFactory

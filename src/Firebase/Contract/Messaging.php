@@ -36,7 +36,7 @@ interface Messaging
      *
      * @return array<array-key, mixed>
      */
-    public function send(Message|array $message, bool $validateOnly = false): array;
+    public function send($message, bool $validateOnly = false): array;
 
     /**
      * @param Message|MessageInputShape $message
@@ -46,7 +46,7 @@ interface Messaging
      * @throws MessagingException if the API request failed
      * @throws FirebaseException if something very unexpected happened (never :))
      */
-    public function sendMulticast(Message|array $message, RegistrationTokens|RegistrationToken|array|string $registrationTokens, bool $validateOnly = false): MulticastSendReport;
+    public function sendMulticast($message, $registrationTokens, bool $validateOnly = false): MulticastSendReport;
 
     /**
      * @param list<Message|MessageInputShape>|Messages $messages
@@ -55,7 +55,7 @@ interface Messaging
      * @throws MessagingException if the API request failed
      * @throws FirebaseException if something very unexpected happened (never :))
      */
-    public function sendAll(array|Messages $messages, bool $validateOnly = false): MulticastSendReport;
+    public function sendAll($messages, bool $validateOnly = false): MulticastSendReport;
 
     /**
      * @param Message|MessageInputShape $message
@@ -67,7 +67,7 @@ interface Messaging
      *
      * @return array<non-empty-string, mixed>
      */
-    public function validate(Message|array $message): array;
+    public function validate($message): array;
 
     /**
      * @param RegistrationTokens|RegistrationToken|list<RegistrationToken|non-empty-string>|non-empty-string $registrationTokenOrTokens
@@ -81,7 +81,7 @@ interface Messaging
      *     invalid: list<non-empty-string>
      * }
      */
-    public function validateRegistrationTokens(RegistrationTokens|RegistrationToken|array|string $registrationTokenOrTokens): array;
+    public function validateRegistrationTokens($registrationTokenOrTokens): array;
 
     /**
      * @param Topic|non-empty-string $topic
@@ -89,7 +89,7 @@ interface Messaging
      *
      * @return array<string, array<string, string>>
      */
-    public function subscribeToTopic(string|Topic $topic, RegistrationTokens|RegistrationToken|array|string $registrationTokenOrTokens): array;
+    public function subscribeToTopic($topic, $registrationTokenOrTokens): array;
 
     /**
      * @param iterable<non-empty-string|Topic> $topics
@@ -97,7 +97,7 @@ interface Messaging
      *
      * @return array<string, array<string, string>>
      */
-    public function subscribeToTopics(iterable $topics, RegistrationTokens|RegistrationToken|array|string $registrationTokenOrTokens): array;
+    public function subscribeToTopics(iterable $topics, $registrationTokenOrTokens): array;
 
     /**
      * @param Topic|non-empty-string $topic
@@ -105,7 +105,7 @@ interface Messaging
      *
      * @return array<string, array<string, string>>
      */
-    public function unsubscribeFromTopic(string|Topic $topic, RegistrationTokens|RegistrationToken|array|string $registrationTokenOrTokens): array;
+    public function unsubscribeFromTopic($topic, $registrationTokenOrTokens): array;
 
     /**
      * @param array<non-empty-string|Topic> $topics
@@ -113,14 +113,14 @@ interface Messaging
      *
      * @return array<string, array<string, string>>
      */
-    public function unsubscribeFromTopics(array $topics, RegistrationTokens|RegistrationToken|array|string $registrationTokenOrTokens): array;
+    public function unsubscribeFromTopics(array $topics, $registrationTokenOrTokens): array;
 
     /**
      * @param RegistrationTokens|RegistrationToken|list<RegistrationToken|non-empty-string>|non-empty-string $registrationTokenOrTokens
      *
      * @return array<string, array<string, string>>
      */
-    public function unsubscribeFromAllTopics(RegistrationTokens|RegistrationToken|array|string $registrationTokenOrTokens): array;
+    public function unsubscribeFromAllTopics($registrationTokenOrTokens): array;
 
     /**
      * @see https://developers.google.com/instance-id/reference/server#results
@@ -130,5 +130,5 @@ interface Messaging
      * @throws InvalidArgument if the registration token is invalid
      * @throws MessagingException
      */
-    public function getAppInstance(RegistrationToken|string $registrationToken): AppInstance;
+    public function getAppInstance($registrationToken): AppInstance;
 }

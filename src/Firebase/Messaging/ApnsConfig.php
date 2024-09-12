@@ -26,6 +26,19 @@ use function array_key_exists;
  */
 final class ApnsConfig implements JsonSerializable
 {
+    /**
+     * @var array<non-empty-string, non-empty-string>
+     */
+    private array $headers;
+    /**
+     * @var array<non-empty-string, mixed>
+     */
+    private array $payload;
+    /**
+     * @var array<non-empty-string, string>
+     * @readonly
+     */
+    private array $fcmOptions;
     private const PRIORITY_CONSERVE_POWER = '5';
     private const PRIORITY_IMMEDIATE = '10';
 
@@ -34,11 +47,11 @@ final class ApnsConfig implements JsonSerializable
      * @param array<non-empty-string, mixed> $payload
      * @param array<non-empty-string, string> $fcmOptions
      */
-    private function __construct(
-        private array $headers,
-        private array $payload,
-        private readonly array $fcmOptions,
-    ) {
+    private function __construct(array $headers, array $payload, array $fcmOptions)
+    {
+        $this->headers = $headers;
+        $this->payload = $payload;
+        $this->fcmOptions = $fcmOptions;
     }
 
     public static function new(): self
@@ -77,8 +90,9 @@ final class ApnsConfig implements JsonSerializable
 
     /**
      * @param non-empty-string $key
+     * @param mixed $value
      */
-    public function withApsField(string $key, mixed $value): self
+    public function withApsField(string $key, $value): self
     {
         $config = clone $this;
         $config->payload['aps'] ??= [];
@@ -89,8 +103,9 @@ final class ApnsConfig implements JsonSerializable
 
     /**
      * @param non-empty-string $name
+     * @param mixed $value
      */
-    public function withDataField(string $name, mixed $value): self
+    public function withDataField(string $name, $value): self
     {
         if ($name === 'aps') {
             throw new InvalidArgument('"aps" is a reserved field name');

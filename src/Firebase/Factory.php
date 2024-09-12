@@ -139,11 +139,11 @@ final class Factory
     /**
      * @param non-empty-string|ServiceAccountShape $value
      */
-    public function withServiceAccount(string|array $value): self
+    public function withServiceAccount($value): self
     {
         $serviceAccount = $value;
 
-        if (is_string($value) && str_starts_with($value, '{')) {
+        if (is_string($value) && strncmp($value, '{', strlen('{')) === 0) {
             try {
                 $serviceAccount = Json::decode($value, true);
             } catch (UnexpectedValueException $e) {
@@ -188,7 +188,7 @@ final class Factory
     /**
      * @param UriInterface|non-empty-string $uri
      */
-    public function withDatabaseUri(UriInterface|string $uri): self
+    public function withDatabaseUri($uri): self
     {
         $url = trim($uri instanceof UriInterface ? $uri->__toString() : $uri);
 
@@ -408,8 +408,8 @@ final class Factory
 
         $errorHandler = new MessagingApiExceptionConverter($this->clock);
         $requestFactory = new RequestFactory(
-            requestFactory: $this->httpFactory,
-            streamFactory: $this->httpFactory,
+            $this->httpFactory,
+            $this->httpFactory,
         );
 
         $messagingApiClient = new Messaging\ApiClient(
@@ -505,7 +505,7 @@ final class Factory
             $credentials = $this->getGoogleAuthTokenCredentials();
 
             if ($credentials !== null) {
-                $credentials = $credentials::class;
+                $credentials = get_class($credentials);
             }
         } catch (Throwable $e) {
             $credentials = $e->getMessage();
@@ -524,8 +524,8 @@ final class Factory
             'projectId' => $projectId,
             'serviceAccount' => $this->getServiceAccount(),
             'tenantId' => $this->tenantId,
-            'tokenCacheType' => $this->authTokenCache::class,
-            'verifierCacheType' => $this->verifierCache::class,
+            'tokenCacheType' => get_class($this->authTokenCache),
+            'verifierCacheType' => get_class($this->verifierCache),
         ];
     }
 
@@ -538,7 +538,7 @@ final class Factory
         $config ??= [];
         $middlewares ??= [];
 
-        $config = [...$this->httpClientOptions->guzzleConfig(), ...$config];
+        $config = array_merge($this->httpClientOptions->guzzleConfig(), $config);
 
         $handler = HandlerStack::create();
 
@@ -694,7 +694,7 @@ final class Factory
                 return null;
             }
 
-            if (!str_starts_with($googleApplicationCredentials, '{')) {
+            if (strncmp($googleApplicationCredentials, '{', strlen('{')) !== 0) {
                 return null;
             }
 
@@ -718,7 +718,7 @@ final class Factory
 
         try {
             return $this->googleAuthTokenCredentials = ApplicationDefaultCredentials::getCredentials(self::API_CLIENT_SCOPES);
-        } catch (Throwable) {
+        } catch (Throwable $exception) {
             return null;
         }
     }

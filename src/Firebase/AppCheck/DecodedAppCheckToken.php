@@ -17,20 +17,46 @@ namespace Kreait\Firebase\AppCheck;
 final class DecodedAppCheckToken
 {
     /**
+     * @var non-empty-string
+     * @readonly
+     */
+    public string $app_id;
+    /**
+     * @var array<string>
+     * @readonly
+     */
+    public array $aud;
+    /**
+     * @readonly
+     */
+    public int $exp;
+    /**
+     * @readonly
+     */
+    public int $iat;
+    /**
+     * @readonly
+     */
+    public string $iss;
+    /**
+     * @var non-empty-string
+     * @readonly
+     */
+    public string $sub;
+    /**
      * @param non-empty-string $app_id
      * @param array<string> $aud
      * @param non-empty-string $sub
      */
-    private function __construct(
-        public readonly string $app_id,
-        public readonly array $aud,
-        public readonly int $exp,
-        public readonly int $iat,
-        public readonly string $iss,
-        public readonly string $sub,
-    ) {
+    private function __construct(string $app_id, array $aud, int $exp, int $iat, string $iss, string $sub)
+    {
+        $this->app_id = $app_id;
+        $this->aud = $aud;
+        $this->exp = $exp;
+        $this->iat = $iat;
+        $this->iss = $iss;
+        $this->sub = $sub;
     }
-
     /**
      * @param DecodedAppCheckTokenShape $data
      */

@@ -6,14 +6,12 @@ namespace Kreait\Firebase\Tests\Unit\Messaging;
 
 use Kreait\Firebase\Messaging\Notification;
 use Kreait\Firebase\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 /**
  * @internal
  */
 final class NotificationTest extends UnitTestCase
 {
-    #[Test]
     public function createWithEmptyStrings(): void
     {
         $notification = Notification::create('', '', '');
@@ -23,7 +21,6 @@ final class NotificationTest extends UnitTestCase
         $this->assertEqualsCanonicalizing(['title' => '', 'body' => '', 'image' => ''], $notification->jsonSerialize());
     }
 
-    #[Test]
     public function createWithValidFields(): void
     {
         $notification = Notification::create('title', 'body')
@@ -31,13 +28,11 @@ final class NotificationTest extends UnitTestCase
             ->withBody($body = 'My Body')
             ->withImageUrl($imageUrl = 'https://example.com/image.ext')
         ;
-
         $this->assertSame($title, $notification->title());
         $this->assertSame($body, $notification->body());
         $this->assertSame($imageUrl, $notification->imageUrl());
     }
 
-    #[Test]
     public function createFromValidArray(): void
     {
         $notification = Notification::fromArray($array = [
@@ -45,7 +40,6 @@ final class NotificationTest extends UnitTestCase
             'body' => $body = 'My Body',
             'image' => $imageUrl = 'https://example.com/image.ext',
         ]);
-
         $this->assertSame($title, $notification->title());
         $this->assertSame($body, $notification->body());
         $this->assertSame($imageUrl, $notification->imageUrl());

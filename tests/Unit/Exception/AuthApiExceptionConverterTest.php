@@ -28,8 +28,6 @@ use Kreait\Firebase\Exception\Auth\UserNotFound;
 use Kreait\Firebase\Exception\Auth\WeakPassword;
 use Kreait\Firebase\Exception\AuthApiExceptionConverter;
 use Kreait\Firebase\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use Psr\Http\Message\RequestInterface;
 use RuntimeException;
 
@@ -45,7 +43,6 @@ final class AuthApiExceptionConverterTest extends UnitTestCase
         $this->converter = new AuthApiExceptionConverter();
     }
 
-    #[Test]
     public function itConvertsARequestExceptionThatDoesNotIncludeValidJson(): void
     {
         $requestException = new RequestException(
@@ -53,25 +50,20 @@ final class AuthApiExceptionConverterTest extends UnitTestCase
             new Request('GET', 'https://example.com'),
             new Response(400, [], $responseBody = '{"what is this"'),
         );
-
         $convertedError = $this->converter->convertException($requestException);
-
         $this->assertInstanceOf(AuthError::class, $convertedError);
         $this->assertSame($responseBody, $convertedError->getMessage());
     }
 
-    #[Test]
     public function itConvertsAConnectException(): void
     {
         $connectException = new ConnectException(
             'curl error xx',
             $this->createMock(RequestInterface::class),
         );
-
         $this->assertInstanceOf(ApiConnectionFailed::class, $this->converter->convertException($connectException));
     }
 
-    #[Test]
     public function itCanHandleUnknownExceptions(): void
     {
         $this->assertInstanceOf(AuthError::class, $this->converter->convertException(new RuntimeException()));
@@ -80,8 +72,6 @@ final class AuthApiExceptionConverterTest extends UnitTestCase
     /**
      * @param class-string<object> $expectedClass
      */
-    #[DataProvider('requestErrors')]
-    #[Test]
     public function itConvertsRequestExceptionsBecause(string $identifier, string $expectedClass): void
     {
         $requestException = new RequestException(
@@ -99,9 +89,7 @@ final class AuthApiExceptionConverterTest extends UnitTestCase
                 ],
             ])),
         );
-
         $convertedError = $this->converter->convertException($requestException);
-
         $this->assertInstanceOf($expectedClass, $convertedError);
     }
 

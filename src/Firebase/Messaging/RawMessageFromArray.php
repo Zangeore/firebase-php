@@ -13,10 +13,16 @@ use Beste\Json;
 final class RawMessageFromArray implements Message
 {
     /**
+     * @var MessageInputShape
+     * @readonly
+     */
+    private array $data;
+    /**
      * @param MessageInputShape $data
      */
-    public function __construct(private readonly array $data)
+    public function __construct(array $data)
     {
+        $this->data = $data;
     }
 
     public function jsonSerialize(): array

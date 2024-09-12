@@ -19,12 +19,19 @@ use Throwable;
  */
 class AppInstanceApiClient
 {
-    public function __construct(
-        private readonly ClientInterface $client,
-        private readonly MessagingApiExceptionConverter $errorHandler,
-    ) {
+    /**
+     * @readonly
+     */
+    private ClientInterface $client;
+    /**
+     * @readonly
+     */
+    private MessagingApiExceptionConverter $errorHandler;
+    public function __construct(ClientInterface $client, MessagingApiExceptionConverter $errorHandler)
+    {
+        $this->client = $client;
+        $this->errorHandler = $errorHandler;
     }
-
     /**
      * @see https://developers.google.com/instance-id/reference/server#manage_relationship_maps_for_multiple_app_instances
      *
@@ -47,7 +54,7 @@ class AppInstanceApiClient
                         'registration_tokens' => $tokenStrings,
                     ],
                 ])
-                ->then(static fn(ResponseInterface $response): mixed => Json::decode((string) $response->getBody(), true))
+                ->then(static fn(ResponseInterface $response) => Json::decode((string) $response->getBody(), true))
             ;
         }
 
@@ -114,7 +121,7 @@ class AppInstanceApiClient
                         'registration_tokens' => $tokenStrings,
                     ],
                 ])
-                ->then(static fn(ResponseInterface $response): mixed => Json::decode((string) $response->getBody(), true))
+                ->then(static fn(ResponseInterface $response) => Json::decode((string) $response->getBody(), true))
             ;
         }
 

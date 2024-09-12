@@ -4,18 +4,11 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase\RemoteConfig;
 
-/**
- * @see https://firebase.google.com/docs/reference/remote-config/rest/v1/RemoteConfig#ParameterValueType
- */
-enum ParameterValueType: string
+class ParameterValueType
 {
-    case UNSPECIFIED = 'PARAMETER_VALUE_TYPE_UNSPECIFIED';
-
-    case STRING = 'STRING';
-
-    case BOOL = 'BOOLEAN';
-
-    case NUMBER = 'NUMBER';
-
-    case JSON = 'JSON';
+    public const UNSPECIFIED = 'PARAMETER_VALUE_TYPE_UNSPECIFIED';
+    public const STRING = 'STRING';
+    public const BOOL = 'BOOLEAN';
+    public const NUMBER = 'NUMBER';
+    public const JSON = 'JSON';
 }

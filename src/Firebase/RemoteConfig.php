@@ -24,11 +24,19 @@ use function is_string;
  */
 final class RemoteConfig implements Contract\RemoteConfig
 {
-    public function __construct(private readonly ApiClient $client)
+    /**
+     * @readonly
+     */
+    private ApiClient $client;
+    public function __construct(ApiClient $client)
     {
+        $this->client = $client;
     }
 
-    public function get(Version|VersionNumber|int|string|null $versionNumber = null): Template
+    /**
+     * @param Version|VersionNumber|int|string|null $versionNumber
+     */
+    public function get($versionNumber = null): Template
     {
         if ($versionNumber !== null) {
             $versionNumber = $this->ensureVersionNumber($versionNumber);
@@ -62,7 +70,10 @@ final class RemoteConfig implements Contract\RemoteConfig
         return $etag;
     }
 
-    public function getVersion(VersionNumber|int|string $versionNumber): Version
+    /**
+     * @param VersionNumber|int|string $versionNumber
+     */
+    public function getVersion($versionNumber): Version
     {
         $versionNumber = $this->ensureVersionNumber($versionNumber);
 
@@ -75,7 +86,10 @@ final class RemoteConfig implements Contract\RemoteConfig
         throw VersionNotFound::withVersionNumber($versionNumber);
     }
 
-    public function rollbackToVersion(VersionNumber|int|string $versionNumber): Template
+    /**
+     * @param VersionNumber|int|string $versionNumber
+     */
+    public function rollbackToVersion($versionNumber): Template
     {
         $versionNumber = $this->ensureVersionNumber($versionNumber);
 
@@ -118,7 +132,7 @@ final class RemoteConfig implements Contract\RemoteConfig
     /**
      * @param VersionNumber|positive-int|non-empty-string $value
      */
-    private function ensureVersionNumber(Version|VersionNumber|int|string $value): VersionNumber
+    private function ensureVersionNumber($value): VersionNumber
     {
         if ($value instanceof VersionNumber) {
             return $value;

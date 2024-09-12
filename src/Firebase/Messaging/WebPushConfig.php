@@ -66,6 +66,10 @@ use function sprintf;
  */
 final class WebPushConfig implements JsonSerializable
 {
+    /**
+     * @var WebPushConfigShape
+     */
+    private array $config;
     private const URGENCY_VERY_LOW = 'very-low';
     private const URGENCY_LOW = 'low';
     private const URGENCY_NORMAL = 'normal';
@@ -80,8 +84,9 @@ final class WebPushConfig implements JsonSerializable
     /**
      * @param WebPushConfigShape $config
      */
-    private function __construct(private array $config)
+    private function __construct(array $config)
     {
+        $this->config = $config;
     }
 
     public static function new(): self

@@ -7,8 +7,6 @@ namespace Kreait\Firebase\Tests\Unit\Value;
 use Iterator;
 use Kreait\Firebase\Exception\InvalidArgumentException;
 use Kreait\Firebase\Value\Email;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -16,17 +14,12 @@ use PHPUnit\Framework\TestCase;
  */
 final class EmailTest extends TestCase
 {
-    #[DataProvider('validValues')]
-    #[Test]
     public function withValidValue(string $value): void
     {
         $email = Email::fromString($value)->value;
-
         $this->assertSame($value, $email);
     }
 
-    #[DataProvider('invalidValues')]
-    #[Test]
     public function withInvalidValue(string $value): void
     {
         $this->expectException(InvalidArgumentException::class);

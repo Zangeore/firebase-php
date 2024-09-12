@@ -25,14 +25,22 @@ use const JSON_FORCE_OBJECT;
 final class GuzzleApiClientHandler
 {
     /**
+     * @readonly
+     */
+    private ClientInterface $client;
+    /**
+     * @var non-empty-string
+     * @readonly
+     */
+    private string $projectId;
+    /**
      * @param non-empty-string $projectId
      */
-    public function __construct(
-        private readonly ClientInterface $client,
-        private readonly string $projectId,
-    ) {
+    public function __construct(ClientInterface $client, string $projectId)
+    {
+        $this->client = $client;
+        $this->projectId = $projectId;
     }
-
     public function handle(CreateSessionCookie $action): string
     {
         $request = $this->createRequest($action);

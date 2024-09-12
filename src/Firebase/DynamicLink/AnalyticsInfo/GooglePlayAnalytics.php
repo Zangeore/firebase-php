@@ -19,10 +19,16 @@ use JsonSerializable;
 final class GooglePlayAnalytics implements JsonSerializable
 {
     /**
+     * @var GooglePlayAnalyticsShape
+     * @readonly
+     */
+    private array $data;
+    /**
      * @param GooglePlayAnalyticsShape $data
      */
-    private function __construct(private readonly array $data)
+    private function __construct(array $data)
     {
+        $this->data = $data;
     }
 
     /**

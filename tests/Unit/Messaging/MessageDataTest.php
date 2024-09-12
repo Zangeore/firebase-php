@@ -7,8 +7,6 @@ namespace Kreait\Firebase\Tests\Unit\Messaging;
 use InvalidArgumentException;
 use Iterator;
 use Kreait\Firebase\Messaging\MessageData;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Stringable;
 
@@ -22,8 +20,6 @@ final class MessageDataTest extends TestCase
     /**
      * @param array<non-empty-string, Stringable|string> $data
      */
-    #[DataProvider('validData')]
-    #[Test]
     public function itAcceptsValidData(array $data): void
     {
         MessageData::fromArray($data);
@@ -33,8 +29,6 @@ final class MessageDataTest extends TestCase
     /**
      * @param array<non-empty-string, Stringable|string> $data
      */
-    #[DataProvider('invalidData')]
-    #[Test]
     public function itRejectsInvalidData(array $data): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -44,13 +38,10 @@ final class MessageDataTest extends TestCase
     /**
      * @see https://github.com/kreait/firebase-php/issues/709
      */
-    #[Test]
     public function itDoesNotLowerCaseKeys(): void
     {
         $input = $output = ['notificationType' => 'email'];
-
         $data = MessageData::fromArray($input);
-
         $this->assertSame($data->toArray(), $output);
     }
 

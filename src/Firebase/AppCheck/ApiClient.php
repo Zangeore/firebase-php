@@ -19,11 +19,18 @@ use Throwable;
  */
 final class ApiClient
 {
-    private readonly AppCheckApiExceptionConverter $errorHandler;
+    /**
+     * @readonly
+     */
+    private ClientInterface $client;
+    /**
+     * @readonly
+     */
+    private AppCheckApiExceptionConverter $errorHandler;
 
-    public function __construct(
-        private readonly ClientInterface $client,
-    ) {
+    public function __construct(ClientInterface $client)
+    {
+        $this->client = $client;
         $this->errorHandler = new AppCheckApiExceptionConverter();
     }
 
@@ -50,8 +57,9 @@ final class ApiClient
      * @param non-empty-string $method
      * @param array<string, mixed>|null $options
      * @throws AppCheckException
+     * @param string|UriInterface $uri
      */
-    private function requestApi(string $method, string|UriInterface $uri, ?array $options = null): ResponseInterface
+    private function requestApi(string $method, string $uri, ?array $options = null): ResponseInterface
     {
         $options ??= [];
 

@@ -9,7 +9,6 @@ use Kreait\Firebase\Exception\DatabaseException;
 use Kreait\Firebase\Exception\InvalidArgumentException;
 use Kreait\Firebase\Exception\OutOfRangeException;
 use Psr\Http\Message\UriInterface;
-use Stringable;
 
 use function array_fill_keys;
 use function array_keys;
@@ -25,26 +24,38 @@ use function trim;
  * A Reference represents a specific location in your database and can be used
  * for reading or writing data to that database location.
  */
-class Reference implements Stringable
+class Reference
 {
-    private readonly UriInterface $uri;
-
+    /**
+     * @readonly
+     */
+    private ApiClient $apiClient;
+    /**
+     * @readonly
+     */
+    private UrlBuilder $urlBuilder;
+    /**
+     * @readonly
+     */
+    private Validator $validator;
+    /**
+     * @readonly
+     */
+    private UriInterface $uri;
     /**
      * @internal
      *
      * @throws InvalidArgumentException if the reference URI is invalid
      */
-    public function __construct(
-        UriInterface $uri,
-        private readonly ApiClient $apiClient,
-        private readonly UrlBuilder $urlBuilder,
-        private readonly Validator $validator = new Validator(),
-    ) {
+    public function __construct(UriInterface $uri, ApiClient $apiClient, UrlBuilder $urlBuilder, Validator $validator = null)
+    {
+        $validator ??= new Validator();
+        $this->apiClient = $apiClient;
+        $this->urlBuilder = $urlBuilder;
+        $this->validator = $validator;
         $this->validator->validateUri($uri);
-
         $this->uri = $uri;
     }
-
     /**
      * Returns the absolute URL for this location.
      *
@@ -54,7 +65,6 @@ class Reference implements Stringable
     {
         return (string) $this->getUri();
     }
-
     /**
      * The last part of the current path.
      *
@@ -68,7 +78,6 @@ class Reference implements Stringable
 
         return $key !== '' ? $key : null;
     }
-
     /**
      * Returns the full path to a reference.
      */
@@ -76,7 +85,6 @@ class Reference implements Stringable
     {
         return trim($this->uri->getPath(), '/');
     }
-
     /**
      * The parent location of a Reference.
      *
@@ -97,7 +105,6 @@ class Reference implements Stringable
             $this->validator,
         );
     }
-
     /**
      * The root location of a Reference.
      */
@@ -105,7 +112,6 @@ class Reference implements Stringable
     {
         return new self($this->uri->withPath('/'), $this->apiClient, $this->urlBuilder, $this->validator);
     }
-
     /**
      * Gets a Reference for the location at the specified relative path.
      *
@@ -129,7 +135,6 @@ class Reference implements Stringable
             throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
         }
     }
-
     /**
      * Generates a new Query object ordered by the specified child key.
      *
@@ -139,7 +144,6 @@ class Reference implements Stringable
     {
         return $this->query()->orderByChild($path);
     }
-
     /**
      * Generates a new Query object ordered by key.
      *
@@ -149,7 +153,6 @@ class Reference implements Stringable
     {
         return $this->query()->orderByKey();
     }
-
     /**
      * Generates a new Query object ordered by child values.
      *
@@ -159,7 +162,6 @@ class Reference implements Stringable
     {
         return $this->query()->orderByValue();
     }
-
     /**
      * Generates a new Query limited to the first specific number of children.
      *
@@ -169,7 +171,6 @@ class Reference implements Stringable
     {
         return $this->query()->limitToFirst($limit);
     }
-
     /**
      * Generates a new Query object limited to the last specific number of children.
      *
@@ -179,57 +180,56 @@ class Reference implements Stringable
     {
         return $this->query()->limitToLast($limit);
     }
-
     /**
      * Creates a Query with the specified starting point (inclusive).
      *
      * @see Query::startAt()
+     * @param bool|string|int|float $value
      */
-    public function startAt(bool|string|int|float $value): Query
+    public function startAt($value): Query
     {
         return $this->query()->startAt($value);
     }
-
     /**
      * Creates a Query with the specified starting point (exclusive).
      *
      * @see Query::startAfter()
+     * @param bool|string|int|float $value
      */
-    public function startAfter(bool|string|int|float $value): Query
+    public function startAfter($value): Query
     {
         return $this->query()->startAfter($value);
     }
-
     /**
      * Creates a Query with the specified ending point (inclusive).
      *
      * @see Query::endAt()
+     * @param bool|string|int|float $value
      */
-    public function endAt(bool|string|int|float $value): Query
+    public function endAt($value): Query
     {
         return $this->query()->endAt($value);
     }
-
     /**
      * Creates a Query with the specified ending point (exclusive).
      *
      * @see Query::endBefore()
+     * @param bool|string|int|float $value
      */
-    public function endBefore(bool|string|int|float $value): Query
+    public function endBefore($value): Query
     {
         return $this->query()->endBefore($value);
     }
-
     /**
      * Creates a Query which includes children which match the specified value.
      *
      * @see Query::equalTo()
+     * @param bool|string|int|float $value
      */
-    public function equalTo(bool|string|int|float $value): Query
+    public function equalTo($value): Query
     {
         return $this->query()->equalTo($value);
     }
-
     /**
      * Creates a Query with shallow results.
      *
@@ -239,7 +239,6 @@ class Reference implements Stringable
     {
         return $this->query()->shallow();
     }
-
     /**
      * Returns the keys of a reference's children.
      *
@@ -258,17 +257,16 @@ class Reference implements Stringable
 
         throw new OutOfRangeException(sprintf('%s has no children with keys', $this));
     }
-
     /**
      * Convenience method for {@see getSnapshot()}->getValue().
      *
      * @throws DatabaseException if the API reported an error
+     * @return mixed
      */
-    public function getValue(): mixed
+    public function getValue()
     {
         return $this->getSnapshot()->getValue();
     }
-
     /**
      * Write data to this database location.
      *
@@ -278,8 +276,9 @@ class Reference implements Stringable
      * all data at this location or any child location will be deleted.
      *
      * @throws DatabaseException if the API reported an error
+     * @param mixed $value
      */
-    public function set(mixed $value): self
+    public function set($value): self
     {
         if ($value === null) {
             $this->apiClient->remove($this->uri->getPath());
@@ -289,7 +288,6 @@ class Reference implements Stringable
 
         return $this;
     }
-
     /**
      * Returns a data snapshot of the current location.
      *
@@ -301,7 +299,6 @@ class Reference implements Stringable
 
         return new Snapshot($this, $value);
     }
-
     /**
      * Generates a new child location using a unique key and returns its reference.
      *
@@ -328,7 +325,6 @@ class Reference implements Stringable
 
         return new self($this->uri->withPath($newPath), $this->apiClient, $this->urlBuilder, $this->validator);
     }
-
     /**
      * Remove the data at this database location.
      *
@@ -342,7 +338,6 @@ class Reference implements Stringable
 
         return $this;
     }
-
     /**
      * Remove the data at the given locations.
      *
@@ -363,7 +358,6 @@ class Reference implements Stringable
 
         return $this;
     }
-
     /**
      * Writes multiple values to the database at once.
      *
@@ -386,7 +380,6 @@ class Reference implements Stringable
 
         return $this;
     }
-
     /**
      * Returns the absolute URL for this location.
      *
@@ -402,7 +395,6 @@ class Reference implements Stringable
     {
         return $this->uri;
     }
-
     /**
      * Returns a new query for the current reference.
      */

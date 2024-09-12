@@ -9,8 +9,6 @@ use Iterator;
 use Kreait\Firebase\Exception\Messaging\InvalidArgument;
 use Kreait\Firebase\Messaging\AndroidConfig;
 use Kreait\Firebase\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 
 /**
  * @internal
@@ -19,13 +17,11 @@ use PHPUnit\Framework\Attributes\Test;
  */
 final class AndroidConfigTest extends UnitTestCase
 {
-    #[Test]
     public function itIsEmptyWhenItIsEmpty(): void
     {
         $this->assertSame('[]', Json::encode(AndroidConfig::new()));
     }
 
-    #[Test]
     public function itHasADefaultSound(): void
     {
         $expected = [
@@ -33,19 +29,16 @@ final class AndroidConfigTest extends UnitTestCase
                 'sound' => 'default',
             ],
         ];
-
         $this->assertJsonStringEqualsJsonString(
             Json::encode($expected),
             Json::encode(AndroidConfig::new()->withDefaultSound()),
         );
     }
 
-    #[Test]
     public function itCanHaveAPriority(): void
     {
         $config = AndroidConfig::new()->withNormalMessagePriority();
         $this->assertSame('normal', $config->jsonSerialize()['priority']);
-
         $config = AndroidConfig::new()->withHighMessagePriority();
         $this->assertSame('high', $config->jsonSerialize()['priority']);
     }
@@ -53,32 +46,29 @@ final class AndroidConfigTest extends UnitTestCase
     /**
      * @param AndroidConfigShape $data
      */
-    #[DataProvider('validDataProvider')]
-    #[Test]
     public function itCanBeCreatedFromAnArray(array $data): void
     {
         $config = AndroidConfig::fromArray($data);
-
         $this->assertEqualsCanonicalizing($data, $config->jsonSerialize());
     }
 
-    #[DataProvider('validTtlValues')]
-    #[Test]
-    public function itAcceptsValidTTLs(int|string|null $ttl): void
+    /**
+     * @param int|string|null $ttl
+     */
+    public function itAcceptsValidTTLs($ttl): void
     {
         AndroidConfig::fromArray([
             'ttl' => $ttl,
         ]);
-
         $this->addToAssertionCount(1);
     }
 
-    #[DataProvider('invalidTtlValues')]
-    #[Test]
-    public function itRejectsInvalidTTLs(mixed $ttl): void
+    /**
+     * @param mixed $ttl
+     */
+    public function itRejectsInvalidTTLs($ttl): void
     {
         $this->expectException(InvalidArgument::class);
-
         AndroidConfig::fromArray([
             'ttl' => $ttl,
         ]);

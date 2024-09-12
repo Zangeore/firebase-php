@@ -8,8 +8,6 @@ use GuzzleHttp\Psr7\Uri;
 use Iterator;
 use Kreait\Firebase\Database\Query\Sorter\OrderByValue;
 use Kreait\Firebase\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 
 use function rawurlencode;
 
@@ -25,7 +23,6 @@ final class OrderByValueTest extends UnitTestCase
         $this->sorter = new OrderByValue();
     }
 
-    #[Test]
     public function modifyUri(): void
     {
         $this->assertStringContainsString(
@@ -34,9 +31,11 @@ final class OrderByValueTest extends UnitTestCase
         );
     }
 
-    #[DataProvider('valueProvider')]
-    #[Test]
-    public function modifyValue(mixed $expected, mixed $given): void
+    /**
+     * @param mixed $expected
+     * @param mixed $given
+     */
+    public function modifyValue($expected, $given): void
     {
         $this->assertSame($expected, $this->sorter->modifyValue($given));
     }

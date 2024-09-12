@@ -23,7 +23,7 @@ final class FailedToSignIn extends RuntimeException implements AuthException
 
         try {
             $message = Json::decode((string) $response->getBody(), true)['error']['message'] ?? $fallbackMessage;
-        } catch (InvalidArgumentException) {
+        } catch (InvalidArgumentException $exception) {
             $message = $fallbackMessage;
         }
 

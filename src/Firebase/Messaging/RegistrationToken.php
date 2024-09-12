@@ -5,17 +5,21 @@ declare(strict_types=1);
 namespace Kreait\Firebase\Messaging;
 
 use JsonSerializable;
-use Stringable;
 
-final class RegistrationToken implements JsonSerializable, Stringable
+final class RegistrationToken implements JsonSerializable
 {
+    /**
+     * @var non-empty-string
+     * @readonly
+     */
+    private string $value;
     /**
      * @param non-empty-string $value
      */
-    private function __construct(private readonly string $value)
+    private function __construct(string $value)
     {
+        $this->value = $value;
     }
-
     /**
      * @return non-empty-string
      */
@@ -23,7 +27,6 @@ final class RegistrationToken implements JsonSerializable, Stringable
     {
         return $this->value;
     }
-
     /**
      * @param non-empty-string $value
      */
@@ -31,7 +34,6 @@ final class RegistrationToken implements JsonSerializable, Stringable
     {
         return new self($value);
     }
-
     /**
      * @return non-empty-string
      */
@@ -39,7 +41,6 @@ final class RegistrationToken implements JsonSerializable, Stringable
     {
         return $this->value;
     }
-
     public function jsonSerialize(): string
     {
         return $this->value;

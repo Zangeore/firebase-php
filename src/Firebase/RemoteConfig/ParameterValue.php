@@ -23,32 +23,47 @@ use function array_key_exists;
  */
 final class ParameterValue implements JsonSerializable
 {
-    private function __construct(
-        private readonly ?string $value = null,
-        private readonly ?bool $useInAppDefault = null,
-        private readonly ?PersonalizationValue $personalizationValue = null,
-        private readonly ?RolloutValue $rolloutValue = null,
-    ) {
+    /**
+     * @readonly
+     */
+    private ?string $value = null;
+    /**
+     * @readonly
+     */
+    private ?bool $useInAppDefault = null;
+    /**
+     * @readonly
+     */
+    private ?PersonalizationValue $personalizationValue = null;
+    /**
+     * @readonly
+     */
+    private ?RolloutValue $rolloutValue = null;
+    private function __construct(?string $value = null, ?bool $useInAppDefault = null, ?PersonalizationValue $personalizationValue = null, ?RolloutValue $rolloutValue = null)
+    {
+        $this->value = $value;
+        $this->useInAppDefault = $useInAppDefault;
+        $this->personalizationValue = $personalizationValue;
+        $this->rolloutValue = $rolloutValue;
     }
-
     public static function withValue(string $value): self
     {
-        return new self(value: $value);
+        return new self($value);
     }
 
     public static function inAppDefault(): self
     {
-        return new self(useInAppDefault: true);
+        return new self(null, true);
     }
 
     public static function withPersonalizationValue(PersonalizationValue $value): self
     {
-        return new self(personalizationValue: $value);
+        return new self(null, null, $value);
     }
 
     public static function withRolloutValue(RolloutValue $value): self
     {
-        return new self(rolloutValue: $value);
+        return new self(null, null, null, $value);
     }
 
     /**

@@ -22,13 +22,24 @@ use function trim;
  */
 final class Database implements Contract\Database
 {
-    public function __construct(
-        private readonly UriInterface $uri,
-        private readonly ApiClient $client,
-        private readonly UrlBuilder $urlBuilder,
-    ) {
+    /**
+     * @readonly
+     */
+    private UriInterface $uri;
+    /**
+     * @readonly
+     */
+    private ApiClient $client;
+    /**
+     * @readonly
+     */
+    private UrlBuilder $urlBuilder;
+    public function __construct(UriInterface $uri, ApiClient $client, UrlBuilder $urlBuilder)
+    {
+        $this->uri = $uri;
+        $this->client = $client;
+        $this->urlBuilder = $urlBuilder;
     }
-
     public function getReference(?string $path = null): Reference
     {
         if ($path === null || trim($path) === '') {
@@ -71,7 +82,10 @@ final class Database implements Contract\Database
         $this->client->updateRules('/.settings/rules', $ruleSet);
     }
 
-    public function runTransaction(callable $callable): mixed
+    /**
+     * @return mixed
+     */
+    public function runTransaction(callable $callable)
     {
         $transaction = new Transaction($this->client);
 

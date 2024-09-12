@@ -15,6 +15,26 @@ use function strtr;
  */
 final class TenantAwareAuthResourceUrlBuilder
 {
+    /**
+     * @var non-empty-string
+     * @readonly
+     */
+    private string $projectId;
+    /**
+     * @var non-empty-string
+     * @readonly
+     */
+    private string $tenantId;
+    /**
+     * @var non-empty-string
+     * @readonly
+     */
+    private string $apiVersion;
+    /**
+     * @var non-empty-string
+     * @readonly
+     */
+    private string $urlFormat;
     private const URL_FORMAT = 'https://identitytoolkit.googleapis.com/{version}/projects/{projectId}/tenants/{tenantId}{api}';
     private const EMULATOR_URL_FORMAT = 'http://{host}/identitytoolkit.googleapis.com/{version}/projects/{projectId}/tenants/{tenantId}{api}';
     private const DEFAULT_API_VERSION = 'v1';
@@ -25,12 +45,12 @@ final class TenantAwareAuthResourceUrlBuilder
      * @param non-empty-string $apiVersion
      * @param non-empty-string $urlFormat
      */
-    private function __construct(
-        private readonly string $projectId,
-        private readonly string $tenantId,
-        private readonly string $apiVersion,
-        private readonly string $urlFormat,
-    ) {
+    private function __construct(string $projectId, string $tenantId, string $apiVersion, string $urlFormat)
+    {
+        $this->projectId = $projectId;
+        $this->tenantId = $tenantId;
+        $this->apiVersion = $apiVersion;
+        $this->urlFormat = $urlFormat;
     }
 
     /**

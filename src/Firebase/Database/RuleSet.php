@@ -12,8 +12,9 @@ class RuleSet implements JsonSerializable
 {
     /**
      * @var array<string, array<mixed>>
+     * @readonly
      */
-    private readonly array $rules;
+    private array $rules;
 
     /**
      * @param array<string, array<mixed>> $rules

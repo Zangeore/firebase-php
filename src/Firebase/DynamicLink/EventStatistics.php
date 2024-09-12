@@ -26,6 +26,11 @@ use function array_filter;
  */
 final class EventStatistics implements Countable, IteratorAggregate
 {
+    /**
+     * @var list<EventStatisticsShape>
+     * @readonly
+     */
+    private array $events;
     public const PLATFORM_ANDROID = 'ANDROID';
     public const PLATFORM_DESKTOP = 'DESKTOP';
     public const PLATFORM_IOS = 'IOS';
@@ -49,8 +54,9 @@ final class EventStatistics implements Countable, IteratorAggregate
     /**
      * @param list<EventStatisticsShape> $events
      */
-    private function __construct(private readonly array $events)
+    private function __construct(array $events)
     {
+        $this->events = $events;
     }
 
     /**
@@ -113,7 +119,7 @@ final class EventStatistics implements Countable, IteratorAggregate
 
     public function filter(callable $filter): self
     {
-        return new self(array_values(array_filter($this->events, $filter)));
+        return new self(array_values(array_filter($this->events, ((((($filter ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value), ((((($filter ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) === null ? ARRAY_FILTER_USE_BOTH : ((((($filter ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) === null ? ARRAY_FILTER_USE_BOTH : (((($filter ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) === null ? ARRAY_FILTER_USE_BOTH : ((($filter ?? fn($value, $key): bool => !empty($value)) ?? fn($value, $key): bool => !empty($value)) === null ? ARRAY_FILTER_USE_BOTH : (($filter ?? fn($value, $key): bool => !empty($value)) === null ? ARRAY_FILTER_USE_BOTH : ($filter === null ? ARRAY_FILTER_USE_BOTH : 0))))))));
     }
 
     /**

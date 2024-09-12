@@ -34,7 +34,7 @@ interface DynamicLinks
      * @throws InvalidArgumentException
      * @throws FailedToCreateDynamicLink
      */
-    public function createUnguessableLink(Stringable|string|CreateDynamicLink|array $url): DynamicLink;
+    public function createUnguessableLink($url): DynamicLink;
 
     /**
      * @param Stringable|non-empty-string|CreateDynamicLink|CreateDynamicLinkShape $url
@@ -42,7 +42,7 @@ interface DynamicLinks
      * @throws InvalidArgumentException
      * @throws FailedToCreateDynamicLink
      */
-    public function createShortLink(Stringable|string|CreateDynamicLink|array $url): DynamicLink;
+    public function createShortLink($url): DynamicLink;
 
     /**
      * @param Stringable|non-empty-string|CreateDynamicLink|CreateDynamicLinkShape $actionOrParametersOrUrl
@@ -50,7 +50,7 @@ interface DynamicLinks
      * @throws InvalidArgumentException
      * @throws FailedToCreateDynamicLink
      */
-    public function createDynamicLink(Stringable|string|CreateDynamicLink|array $actionOrParametersOrUrl, ?string $suffixType = null): DynamicLink;
+    public function createDynamicLink($actionOrParametersOrUrl, ?string $suffixType = null): DynamicLink;
 
     /**
      * @param Stringable|non-empty-string|ShortenLongDynamicLink|ShortenLongDynamicLinkShape $longDynamicLinkOrAction
@@ -58,11 +58,12 @@ interface DynamicLinks
      * @throws InvalidArgumentException
      * @throws FailedToShortenLongDynamicLink
      */
-    public function shortenLongDynamicLink(Stringable|string|ShortenLongDynamicLink|array $longDynamicLinkOrAction, ?string $suffixType = null): DynamicLink;
+    public function shortenLongDynamicLink($longDynamicLinkOrAction, ?string $suffixType = null): DynamicLink;
 
     /**
      * @throws InvalidArgumentException
      * @throws GetStatisticsForDynamicLink\FailedToGetStatisticsForDynamicLink
+     * @param Stringable|string|GetStatisticsForDynamicLink $dynamicLinkOrAction
      */
-    public function getStatistics(Stringable|string|GetStatisticsForDynamicLink $dynamicLinkOrAction, ?int $durationInDays = null): DynamicLinkStatistics;
+    public function getStatistics($dynamicLinkOrAction, ?int $durationInDays = null): DynamicLinkStatistics;
 }

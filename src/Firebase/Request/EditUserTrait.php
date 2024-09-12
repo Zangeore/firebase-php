@@ -41,7 +41,10 @@ trait EditUserTrait
         return $request;
     }
 
-    public function withEmail(Stringable|string $email): self
+    /**
+     * @param Stringable|string $email
+     */
+    public function withEmail($email): self
     {
         $request = clone $this;
         $request->email = Email::fromString((string) $email)->value;
@@ -49,7 +52,10 @@ trait EditUserTrait
         return $request;
     }
 
-    public function withVerifiedEmail(Stringable|string $email): self
+    /**
+     * @param Stringable|string $email
+     */
+    public function withVerifiedEmail($email): self
     {
         $request = clone $this;
         $request->email = Email::fromString((string) $email)->value;
@@ -58,7 +64,10 @@ trait EditUserTrait
         return $request;
     }
 
-    public function withUnverifiedEmail(Stringable|string $email): self
+    /**
+     * @param Stringable|string $email
+     */
+    public function withUnverifiedEmail($email): self
     {
         $request = clone $this;
         $request->email = Email::fromString((string) $email)->value;
@@ -88,7 +97,10 @@ trait EditUserTrait
         return $request;
     }
 
-    public function withPhotoUrl(Stringable|string $url): self
+    /**
+     * @param Stringable|string $url
+     */
+    public function withPhotoUrl($url): self
     {
         $request = clone $this;
         $request->photoUrl = Url::fromString($url)->value;
@@ -130,7 +142,10 @@ trait EditUserTrait
         return $request;
     }
 
-    public function withClearTextPassword(Stringable|string $clearTextPassword): self
+    /**
+     * @param Stringable|string $clearTextPassword
+     */
+    public function withClearTextPassword($clearTextPassword): self
     {
         $request = clone $this;
         $request->clearTextPassword = ClearTextPassword::fromString($clearTextPassword)->value;

@@ -22,32 +22,54 @@ use function is_string;
 class Parameter implements JsonSerializable
 {
     /**
+     * @var non-empty-string
+     * @readonly
+     */
+    private string $name;
+    /**
+     * @readonly
+     */
+    private string $description;
+    /**
+     * @readonly
+     */
+    private ?ParameterValue $defaultValue;
+    /**
+     * @var list<ConditionalValue>
+     * @readonly
+     */
+    private array $conditionalValues;
+    /**
+     * @readonly
+     */
+    private ParameterValueType $valueType;
+    /**
      * @param non-empty-string $name
      * @param list<ConditionalValue> $conditionalValues
      */
-    private function __construct(
-        private readonly string $name,
-        private readonly string $description,
-        private readonly ?ParameterValue $defaultValue,
-        private readonly array $conditionalValues,
-        private readonly ParameterValueType $valueType,
-    ) {
+    private function __construct(string $name, string $description, ?ParameterValue $defaultValue, array $conditionalValues, ParameterValueType $valueType)
+    {
+        $this->name = $name;
+        $this->description = $description;
+        $this->defaultValue = $defaultValue;
+        $this->conditionalValues = $conditionalValues;
+        $this->valueType = $valueType;
     }
-
     /**
      * @param non-empty-string $name
      * @param DefaultValue|RemoteConfigParameterValueShape|string|bool|null $defaultValue
+     * @param ?\Kreait\Firebase\RemoteConfig\ParameterValueType::* $valueType
      */
-    public static function named(string $name, $defaultValue = null, ?ParameterValueType $valueType = null): self
+    public static function named(string $name, $defaultValue = null, ?function $valueType = null): self
     {
         $defaultValue = self::mapDefaultValue($defaultValue);
 
         return new self(
-            name: $name,
-            description: '',
-            defaultValue: $defaultValue,
-            conditionalValues: [],
-            valueType: $valueType ?? ParameterValueType::UNSPECIFIED,
+            $name,
+            '',
+            $defaultValue,
+            [],
+            $valueType ?? ParameterValueType::UNSPECIFIED,
         );
     }
 
@@ -91,11 +113,11 @@ class Parameter implements JsonSerializable
     public function withDescription(string $description): self
     {
         return new self(
-            name: $this->name,
-            description: $description,
-            defaultValue: $this->defaultValue,
-            conditionalValues: $this->conditionalValues,
-            valueType: $this->valueType,
+            $this->name,
+            $description,
+            $this->defaultValue,
+            $this->conditionalValues,
+            $this->valueType,
         );
     }
 
@@ -107,11 +129,11 @@ class Parameter implements JsonSerializable
         $defaultValue = self::mapDefaultValue($defaultValue);
 
         return new self(
-            name: $this->name,
-            description: $this->description,
-            defaultValue: $defaultValue,
-            conditionalValues: $this->conditionalValues,
-            valueType: $this->valueType,
+            $this->name,
+            $this->description,
+            $defaultValue,
+            $this->conditionalValues,
+            $this->valueType,
         );
     }
 
@@ -133,11 +155,11 @@ class Parameter implements JsonSerializable
         $conditionalValues[] = $conditionalValue;
 
         return new self(
-            name: $this->name,
-            description: $this->description,
-            defaultValue: $this->defaultValue,
-            conditionalValues: $conditionalValues,
-            valueType: $this->valueType,
+            $this->name,
+            $this->description,
+            $this->defaultValue,
+            $conditionalValues,
+            $this->valueType,
         );
     }
 
@@ -149,14 +171,17 @@ class Parameter implements JsonSerializable
         return $this->conditionalValues;
     }
 
-    public function withValueType(ParameterValueType $valueType): self
+    /**
+     * @param mixed $valueType
+     */
+    public function withValueType($valueType): self
     {
         return new self(
-            name: $this->name,
-            description: $this->description,
-            defaultValue: $this->defaultValue,
-            conditionalValues: $this->conditionalValues,
-            valueType: $valueType,
+            $this->name,
+            $this->description,
+            $this->defaultValue,
+            $this->conditionalValues,
+            $valueType,
         );
     }
 

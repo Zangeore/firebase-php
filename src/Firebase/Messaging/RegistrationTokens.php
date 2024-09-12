@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase\Messaging;
 
+use Closure;
 use Countable;
 use IteratorAggregate;
 use Kreait\Firebase\Exception\Messaging\InvalidArgument;
@@ -21,8 +22,9 @@ final class RegistrationTokens implements Countable, IteratorAggregate
 {
     /**
      * @var list<RegistrationToken>
+     * @readonly
      */
-    private readonly array $tokens;
+    private array $tokens;
 
     /**
      * @internal
@@ -92,7 +94,7 @@ final class RegistrationTokens implements Countable, IteratorAggregate
     {
         return array_values(
             array_filter(
-                array_map(strval(...), $this->tokens),
+                array_map(Closure::fromCallable('strval'), $this->tokens),
             ),
         );
     }

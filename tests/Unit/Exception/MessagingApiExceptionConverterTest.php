@@ -21,8 +21,6 @@ use Kreait\Firebase\Exception\Messaging\QuotaExceeded;
 use Kreait\Firebase\Exception\Messaging\ServerError;
 use Kreait\Firebase\Exception\Messaging\ServerUnavailable;
 use Kreait\Firebase\Exception\MessagingApiExceptionConverter;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use RuntimeException;
@@ -44,26 +42,21 @@ final class MessagingApiExceptionConverterTest extends TestCase
         $this->converter = new MessagingApiExceptionConverter($this->clock);
     }
 
-    #[Test]
     public function itConvertsAConnectException(): void
     {
         $connectException = new ConnectException(
             'curl error xx',
             $this->createMock(RequestInterface::class),
         );
-
         $this->assertInstanceOf(ApiConnectionFailed::class, $this->converter->convertException($connectException));
     }
 
     /**
      * @param class-string<object> $expectedClass
      */
-    #[DataProvider('exceptions')]
-    #[Test]
     public function itConvertsExceptions(Throwable $e, string $expectedClass): void
     {
         $converted = $this->converter->convertException($e);
-
         $this->assertInstanceOf($expectedClass, $converted);
     }
 
@@ -100,40 +93,31 @@ final class MessagingApiExceptionConverterTest extends TestCase
         );
     }
 
-    #[Test]
     public function itKnowsWhenToRetryAfterWithSeconds(): void
     {
         $response = new Response(429, ['Retry-After' => 60]);
-
         $converted = $this->converter->convertResponse($response);
         $expected = $this->clock->now()->modify('+60 seconds');
-
         $this->assertInstanceOf(QuotaExceeded::class, $converted);
         $this->assertInstanceOf(DateTimeImmutable::class, $converted->retryAfter());
         $this->assertSame($expected->getTimestamp(), $converted->retryAfter()->getTimestamp());
     }
 
-    #[Test]
     public function itKnowsWhenToRetryAfterWithDateStrings(): void
     {
         $expected = $this->clock->now()->modify('+60 seconds');
-
         $response = new Response(503, ['Retry-After' => $expected->format(DATE_ATOM)]);
-
         $converted = $this->converter->convertResponse($response);
-
         $this->assertInstanceOf(ServerUnavailable::class, $converted);
         $this->assertInstanceOf(DateTimeImmutable::class, $converted->retryAfter());
         $this->assertSame($expected->getTimestamp(), $converted->retryAfter()->getTimestamp());
     }
 
-    #[Test]
     public function it_does_not_know_when_to_retry_when_it_does_not_have_to(): void
     {
-        $response = new Response(503); // no Retry-After
-
+        $response = new Response(503);
+        // no Retry-After
         $converted = $this->converter->convertResponse($response);
-
         $this->assertInstanceOf(ServerUnavailable::class, $converted);
         $this->assertNull($converted->retryAfter());
     }

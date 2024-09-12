@@ -12,12 +12,19 @@ namespace Kreait\Firebase\AppCheck;
  */
 final class AppCheckToken
 {
-    private function __construct(
-        public readonly string $token,
-        public readonly string $ttl,
-    ) {
+    /**
+     * @readonly
+     */
+    public string $token;
+    /**
+     * @readonly
+     */
+    public string $ttl;
+    private function __construct(string $token, string $ttl)
+    {
+        $this->token = $token;
+        $this->ttl = $ttl;
     }
-
     /**
      * @param AppCheckTokenShape $data
      */

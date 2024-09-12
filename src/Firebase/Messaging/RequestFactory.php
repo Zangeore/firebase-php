@@ -14,12 +14,23 @@ use Psr\Http\Message\StreamFactoryInterface;
  */
 final class RequestFactory
 {
-    private readonly bool $environmentSupportsHTTP2;
+    /**
+     * @readonly
+     */
+    private RequestFactoryInterface $requestFactory;
+    /**
+     * @readonly
+     */
+    private StreamFactoryInterface $streamFactory;
+    /**
+     * @readonly
+     */
+    private bool $environmentSupportsHTTP2;
 
-    public function __construct(
-        private readonly RequestFactoryInterface $requestFactory,
-        private readonly StreamFactoryInterface $streamFactory,
-    ) {
+    public function __construct(RequestFactoryInterface $requestFactory, StreamFactoryInterface $streamFactory)
+    {
+        $this->requestFactory = $requestFactory;
+        $this->streamFactory = $streamFactory;
         $this->environmentSupportsHTTP2 = self::environmentSupportsHTTP2();
     }
 

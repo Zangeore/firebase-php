@@ -24,17 +24,44 @@ use function array_key_exists;
  */
 final class Version
 {
-    private function __construct(
-        private readonly VersionNumber $versionNumber,
-        private readonly User $user,
-        private readonly string $description,
-        private readonly DateTimeImmutable $updatedAt,
-        private readonly UpdateOrigin $updateOrigin,
-        private readonly UpdateType $updateType,
-        private readonly ?VersionNumber $rollbackSource,
-    ) {
+    /**
+     * @readonly
+     */
+    private VersionNumber $versionNumber;
+    /**
+     * @readonly
+     */
+    private User $user;
+    /**
+     * @readonly
+     */
+    private string $description;
+    /**
+     * @readonly
+     */
+    private DateTimeImmutable $updatedAt;
+    /**
+     * @readonly
+     */
+    private UpdateOrigin $updateOrigin;
+    /**
+     * @readonly
+     */
+    private UpdateType $updateType;
+    /**
+     * @readonly
+     */
+    private ?VersionNumber $rollbackSource;
+    private function __construct(VersionNumber $versionNumber, User $user, string $description, DateTimeImmutable $updatedAt, UpdateOrigin $updateOrigin, UpdateType $updateType, ?VersionNumber $rollbackSource)
+    {
+        $this->versionNumber = $versionNumber;
+        $this->user = $user;
+        $this->description = $description;
+        $this->updatedAt = $updatedAt;
+        $this->updateOrigin = $updateOrigin;
+        $this->updateType = $updateType;
+        $this->rollbackSource = $rollbackSource;
     }
-
     /**
      * @internal
      *

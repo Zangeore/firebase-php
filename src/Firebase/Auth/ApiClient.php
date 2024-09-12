@@ -26,7 +26,6 @@ use Throwable;
 use function array_filter;
 use function array_map;
 use function is_array;
-use function str_contains;
 use function time;
 
 /**
@@ -34,27 +33,57 @@ use function time;
  */
 class ApiClient
 {
-    private readonly ProjectAwareAuthResourceUrlBuilder|TenantAwareAuthResourceUrlBuilder $awareAuthResourceUrlBuilder;
-    private readonly AuthResourceUrlBuilder $authResourceUrlBuilder;
-    private readonly AuthApiExceptionConverter $errorHandler;
+    /**
+     * @var non-empty-string
+     * @readonly
+     */
+    private string $projectId;
+    /**
+     * @var non-empty-string|null
+     * @readonly
+     */
+    private ?string $tenantId;
+    /**
+     * @readonly
+     */
+    private ClientInterface $client;
+    /**
+     * @readonly
+     */
+    private GuzzleHandler $signInHandler;
+    /**
+     * @readonly
+     */
+    private ClockInterface $clock;
+    /**
+     * @readonly
+     * @var ProjectAwareAuthResourceUrlBuilder|TenantAwareAuthResourceUrlBuilder
+     */
+    private $awareAuthResourceUrlBuilder;
+    /**
+     * @readonly
+     */
+    private AuthResourceUrlBuilder $authResourceUrlBuilder;
+    /**
+     * @readonly
+     */
+    private AuthApiExceptionConverter $errorHandler;
 
     /**
      * @param non-empty-string $projectId
      * @param non-empty-string|null $tenantId
      */
-    public function __construct(
-        private readonly string $projectId,
-        private readonly ?string $tenantId,
-        private readonly ClientInterface $client,
-        private readonly GuzzleHandler $signInHandler,
-        private readonly ClockInterface $clock,
-    ) {
+    public function __construct(string $projectId, ?string $tenantId, ClientInterface $client, GuzzleHandler $signInHandler, ClockInterface $clock)
+    {
+        $this->projectId = $projectId;
+        $this->tenantId = $tenantId;
+        $this->client = $client;
+        $this->signInHandler = $signInHandler;
+        $this->clock = $clock;
         $this->errorHandler = new AuthApiExceptionConverter();
-
         $this->awareAuthResourceUrlBuilder = $tenantId !== null
             ? TenantAwareAuthResourceUrlBuilder::forProjectAndTenant($projectId, $tenantId)
             : ProjectAwareAuthResourceUrlBuilder::forProject($projectId);
-
         $this->authResourceUrlBuilder = AuthResourceUrlBuilder::create();
     }
 
@@ -165,7 +194,7 @@ class ApiClient
      *
      * @throws AuthException
      */
-    public function getAccountInfo(string|array $uids): ResponseInterface
+    public function getAccountInfo($uids): ResponseInterface
     {
         if (!is_array($uids)) {
             $uids = [$uids];
@@ -245,7 +274,10 @@ class ApiClient
         ]);
     }
 
-    public function createSessionCookie(string $idToken, int|DateInterval $ttl): string
+    /**
+     * @param int|DateInterval $ttl
+     */
+    public function createSessionCookie(string $idToken, $ttl): string
     {
         return (new GuzzleApiClientHandler($this->client, $this->projectId))
             ->handle(CreateSessionCookie::forIdToken($idToken, $this->tenantId, $ttl, $this->clock))
@@ -296,11 +328,11 @@ class ApiClient
         $options = [];
         $method = 'GET';
 
-        if (!str_contains($uri, 'projects')) {
+        if (strpos($uri, 'projects') === false) {
             $data['targetProjectId'] = $this->projectId;
         }
 
-        if ($this->tenantId !== null && !str_contains($uri, 'tenants')) {
+        if ($this->tenantId !== null && strpos($uri, 'tenants') === false) {
             $data['tenantId'] = $this->tenantId;
         }
 

@@ -7,7 +7,6 @@ namespace Kreait\Firebase\Tests\Integration\Request;
 use Kreait\Firebase\Contract\Auth;
 use Kreait\Firebase\Request\CreateUser;
 use Kreait\Firebase\Tests\IntegrationTestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 use function bin2hex;
 use function random_bytes;
@@ -25,7 +24,6 @@ final class CreateUserTest extends IntegrationTestCase
         $this->auth = self::$factory->createAuth();
     }
 
-    #[Test]
     public function createUser(): void
     {
         $request = CreateUser::new()
@@ -36,35 +34,29 @@ final class CreateUserTest extends IntegrationTestCase
             ->withPhoneNumber($phoneNumber = '+1234567'.random_int(1000, 9999))
             ->withVerifiedEmail($email = $uid.'@example.org')
         ;
-
         $user = $this->auth->createUser($request);
-
         $this->assertSame($uid, $user->uid);
         $this->assertSame($displayName, $user->displayName);
-        $this->assertSame($photoUrl, $user->photoUrl); // Firebase stores the photo url in the email provider info
+        $this->assertSame($photoUrl, $user->photoUrl);
+        // Firebase stores the photo url in the email provider info
         $this->assertNotNull($user->passwordHash);
         $this->assertSame($phoneNumber, $user->phoneNumber);
         $this->assertSame($email, $user->email);
         $this->assertTrue($user->emailVerified);
         $this->assertFalse($user->disabled);
-
         $this->auth->deleteUser($user->uid);
     }
 
-    #[Test]
     public function createUserWithoutEmailButMarkTheEmailAsUnverified(): void
     {
         $request = CreateUser::new()
             ->withUid($uid = bin2hex(random_bytes(5)))
             ->markEmailAsUnverified()
         ;
-
         $user = $this->auth->createUser($request);
-
         $this->assertSame($uid, $user->uid);
         $this->assertNull($user->email);
         $this->assertFalse($user->emailVerified);
-
         $this->auth->deleteUser($user->uid);
     }
 }

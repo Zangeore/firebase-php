@@ -18,20 +18,27 @@ use Stringable;
  */
 final class ShortenLongDynamicLink implements JsonSerializable
 {
+    /**
+     * @var ShortenLongDynamicLinkShape
+     * @readonly
+     */
+    private array $data;
     public const WITH_UNGUESSABLE_SUFFIX = 'UNGUESSABLE';
     public const WITH_SHORT_SUFFIX = 'SHORT';
 
     /**
      * @param ShortenLongDynamicLinkShape $data
      */
-    private function __construct(private readonly array $data)
+    private function __construct(array $data)
     {
+        $this->data = $data;
     }
 
     /**
      * The long dynamic link that has been created as described in {@see https://firebase.google.com/docs/dynamic-links/create-manually}.
+     * @param Stringable|string $url
      */
-    public static function forLongDynamicLink(Stringable|string $url): self
+    public static function forLongDynamicLink($url): self
     {
         return new self([
             'longDynamicLink' => Url::fromString($url)->value,

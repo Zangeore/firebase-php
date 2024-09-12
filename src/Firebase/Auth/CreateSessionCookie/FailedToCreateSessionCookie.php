@@ -14,26 +14,29 @@ use Throwable;
 
 final class FailedToCreateSessionCookie extends RuntimeException implements AuthException
 {
-    public function __construct(
-        private readonly CreateSessionCookie $action,
-        private readonly ?ResponseInterface $response,
-        ?string $message = null,
-        ?int $code = null,
-        ?Throwable $previous = null,
-    ) {
+    /**
+     * @readonly
+     */
+    private CreateSessionCookie $action;
+    /**
+     * @readonly
+     */
+    private ?ResponseInterface $response;
+    public function __construct(CreateSessionCookie $action, ?ResponseInterface $response, ?string $message = null, ?int $code = null, ?Throwable $previous = null)
+    {
+        $this->action = $action;
+        $this->response = $response;
         $message ??= '';
         $code ??= 0;
-
         parent::__construct($message, $code, $previous);
     }
-
     public static function withActionAndResponse(CreateSessionCookie $action, ResponseInterface $response): self
     {
         $fallbackMessage = 'Failed to create session cookie';
 
         try {
             $message = Json::decode((string) $response->getBody(), true)['error']['message'] ?? $fallbackMessage;
-        } catch (InvalidArgumentException) {
+        } catch (InvalidArgumentException $exception) {
             $message = $fallbackMessage;
         }
 

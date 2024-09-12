@@ -6,7 +6,6 @@ namespace Kreait\Firebase\Tests\Unit\RemoteConfig;
 
 use Kreait\Firebase\RemoteConfig\Parameter;
 use Kreait\Firebase\RemoteConfig\ParameterGroup;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,7 +13,6 @@ use PHPUnit\Framework\TestCase;
  */
 final class ParameterGroupTest extends TestCase
 {
-    #[Test]
     public function itCanBeCreated(): void
     {
         $group = ParameterGroup::named($name = 'name')
@@ -22,10 +20,8 @@ final class ParameterGroupTest extends TestCase
             ->withParameter($first = Parameter::named('first'))
             ->withParameter($second = Parameter::named('second'))
         ;
-
         $this->assertSame($name, $group->name());
         $this->assertSame($description, $group->description());
-
         $this->assertContains($first, $group->parameters());
         $this->assertContains($second, $group->parameters());
     }

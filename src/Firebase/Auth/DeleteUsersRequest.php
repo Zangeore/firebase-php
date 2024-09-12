@@ -13,13 +13,21 @@ use Stringable;
  */
 final class DeleteUsersRequest
 {
+    /**
+     * @readonly
+     */
+    private array $uids;
+    /**
+     * @readonly
+     */
+    private bool $enabledUsersShouldBeForceDeleted;
     private const MAX_BATCH_SIZE = 1000;
 
-    private function __construct(
+    private function __construct(array $uids, bool $enabledUsersShouldBeForceDeleted)
+    {
         /** @var list<string> $uids */
-        private readonly array $uids,
-        private readonly bool $enabledUsersShouldBeForceDeleted,
-    ) {
+        $this->uids = $uids;
+        $this->enabledUsersShouldBeForceDeleted = $enabledUsersShouldBeForceDeleted;
     }
 
     /**
